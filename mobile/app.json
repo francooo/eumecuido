@@ -1,0 +1,29 @@
+{
+  "expo": {
+    "name": "Gentle Care",
+    "slug": "gentle-care-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "gentle-care",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "splash": {
+      "backgroundColor": "#f6f8f7",
+      "resizeMode": "contain"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.gentlecare.mobile"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#f6f8f7"
+      },
+      "package": "com.gentlecare.mobile"
+    },
+    "plugins": [
+      "expo-router"
+    ]
+  }
+}
