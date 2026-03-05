@@ -94,7 +94,7 @@ export default function WelcomeScreen() {
             <Ionicons name="leaf" size={28} color={colors.primary} />
           </View>
           <Text style={styles.title}>Gentle Care</Text>
-          <Text style={styles.subtitle}>Health tracking, simplified.</Text>
+          <Text style={styles.subtitle}>Acompanhamento de saúde, simplificado.</Text>
         </View>
 
         <View style={styles.actionsSection}>

@@ -34,7 +34,7 @@ const todayLogs: LogEntry[] = [
     icon: "scale-outline",
     iconBg: "rgba(59, 130, 246, 0.08)",
     iconColor: "#3b82f6",
-    title: "Weight Check",
+    title: "Verificação de Peso",
     detail: "14.2kg • Leo",
     time: "08:15 AM",
   },
@@ -53,7 +53,7 @@ const yesterdayLogs: LogEntry[] = [
     icon: "thermometer-outline",
     iconBg: "rgba(232, 157, 157, 0.1)",
     iconColor: colors.alertRose,
-    title: "Temperature",
+    title: "Temperatura",
     detail: "38.5°C • Leo",
     time: "07:45 PM",
     dot: colors.alertRose,
@@ -62,8 +62,8 @@ const yesterdayLogs: LogEntry[] = [
     icon: "document-text-outline",
     iconBg: "rgba(251, 146, 60, 0.1)",
     iconColor: "#fb923c",
-    title: "Doctor Note",
-    detail: '"Drink plenty of water"',
+    title: "Nota do Médico",
+    detail: '"Beber bastante água"',
     time: "10:00 AM",
   },
 ];
@@ -99,7 +99,7 @@ export default function HistoryScreen() {
         <TouchableOpacity style={styles.headerBtn}>
           <Ionicons name="arrow-back" size={22} color={colors.slate800} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>History Log</Text>
+        <Text style={styles.headerTitle}>Histórico</Text>
         <TouchableOpacity style={styles.headerBtn}>
           <Ionicons name="filter" size={22} color={colors.slate800} />
         </TouchableOpacity>
@@ -131,28 +131,28 @@ export default function HistoryScreen() {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.group}>
-          <Text style={styles.groupTitle}>Today</Text>
+          <Text style={styles.groupTitle}>Hoje</Text>
           {todayLogs.map((e, i) => (
             <LogCard key={i} entry={e} />
           ))}
         </View>
 
         <View style={styles.group}>
-          <Text style={styles.groupTitle}>Yesterday</Text>
+          <Text style={styles.groupTitle}>Ontem</Text>
           {yesterdayLogs.map((e, i) => (
             <LogCard key={i} entry={e} />
           ))}
         </View>
 
         <View style={styles.endMarker}>
-          <Text style={styles.endText}>End of history for this week</Text>
+          <Text style={styles.endText}>Fim do histórico desta semana</Text>
         </View>
       </ScrollView>
 
       <View style={styles.shareContainer}>
         <TouchableOpacity style={styles.shareButton}>
           <Ionicons name="share-outline" size={20} color={colors.white} />
-          <Text style={styles.shareText}>Share with Doctor</Text>
+          <Text style={styles.shareText}>Compartilhar com Médico</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

@@ -10,8 +10,8 @@ export default function DashboardScreen() {
         <header className="pt-8 px-6 pb-2 bg-background-light dark:bg-background-dark sticky top-0 z-10">
           <div className="flex items-center justify-between mb-2">
             <div className="flex flex-col">
-              <h1 className="text-2xl font-bold tracking-tight text-text-main dark:text-white">Good Morning, Sarah</h1>
-              <p className="text-lavender font-bold text-xs tracking-widest uppercase mt-1">OCT 24 • THURSDAY</p>
+              <h1 className="text-2xl font-bold tracking-tight text-text-main dark:text-white">Bom Dia, Sarah</h1>
+              <p className="text-lavender font-bold text-xs tracking-widest uppercase mt-1">OUT 24 • QUINTA-FEIRA</p>
             </div>
             <div className="relative group cursor-pointer">
               <span className="material-symbols-outlined text-text-muted dark:text-primary/70 text-3xl">notifications</span>
@@ -67,7 +67,7 @@ export default function DashboardScreen() {
               <div className="relative p-1 rounded-full border-2 border-dashed border-lavender flex items-center justify-center size-[72px] bg-lavender-light/50 dark:bg-surface-dark">
                 <span className="material-symbols-outlined text-lavender text-2xl">add</span>
               </div>
-              <span className="text-sm font-medium text-text-muted dark:text-gray-400">Add</span>
+              <span className="text-sm font-medium text-text-muted dark:text-gray-400">Adicionar</span>
             </div>
           </div>
         </section>
@@ -85,11 +85,11 @@ export default function DashboardScreen() {
                   </div>
                   <div>
                     <h3 className="text-lg font-bold text-text-main dark:text-white leading-tight">Amoxicillin</h3>
-                    <p className="text-text-muted dark:text-gray-400 text-sm font-medium">5ml • Liquid</p>
+                    <p className="text-text-muted dark:text-gray-400 text-sm font-medium">5ml • Líquido</p>
                   </div>
                 </div>
                 <div className="bg-rose-light dark:bg-rose/20 text-rose dark:text-rose-300 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide flex items-center gap-1">
-                  <span className="material-symbols-outlined text-sm">schedule</span> Due 9:00 AM
+                  <span className="material-symbols-outlined text-sm">schedule</span> Às 9:00 AM
                 </div>
               </div>
               <div className="flex items-center justify-between mt-1">
@@ -98,7 +98,7 @@ export default function DashboardScreen() {
                 </div>
                 <button className="bg-primary hover:bg-primary/90 text-primary-content px-6 py-3 rounded-full font-bold text-sm transition-colors shadow-lg shadow-primary/20 flex items-center gap-2">
                   <span className="material-symbols-outlined text-lg">check</span>
-                  Log Now
+                  Registrar
                 </button>
               </div>
             </div>
@@ -110,7 +110,7 @@ export default function DashboardScreen() {
             <div className="bg-surface-light dark:bg-surface-dark rounded-xl p-4 shadow-card flex flex-col justify-between h-36 relative overflow-hidden">
               <div className="flex justify-between items-start z-10">
                 <div>
-                  <p className="text-xs font-bold text-lavender uppercase tracking-wider">Weight</p>
+                  <p className="text-xs font-bold text-lavender uppercase tracking-wider">Peso</p>
                   <h4 className="text-2xl font-bold text-text-main dark:text-white mt-1">14.2<span className="text-sm text-text-muted ml-1 font-normal">kg</span></h4>
                 </div>
                 <div className="bg-primary/10 p-1.5 rounded-full text-primary">
@@ -124,16 +124,16 @@ export default function DashboardScreen() {
                   <path d="M0 35 Q 20 30, 40 25 T 100 10" fill="none" stroke="#2beeba" strokeLinecap="round" strokeWidth="3"></path>
                 </svg>
               </div>
-              <p className="text-[10px] text-text-muted dark:text-gray-500 z-10 mt-auto pt-2">+0.4kg since last check</p>
+              <p className="text-[10px] text-text-muted dark:text-gray-500 z-10 mt-auto pt-2">+0.4kg desde a última verificação</p>
             </div>
 
             {/* Next Up Widget (Low Priority) */}
             <div className="bg-surface-light dark:bg-surface-dark rounded-xl p-4 shadow-card flex flex-col justify-between h-36">
               <div className="flex justify-between items-start">
                 <div>
-                  <p className="text-xs font-bold text-lavender uppercase tracking-wider">Upcoming</p>
+                  <p className="text-xs font-bold text-lavender uppercase tracking-wider">Próximos</p>
                   <h4 className="text-lg font-bold text-text-main dark:text-white mt-1">Ibuprofen</h4>
-                  <p className="text-xs text-text-muted dark:text-gray-400">Tablet • 200mg</p>
+                  <p className="text-xs text-text-muted dark:text-gray-400">Comprimido • 200mg</p>
                 </div>
                 <div className="bg-lavender-light dark:bg-gray-700 p-1.5 rounded-full text-lavender dark:text-gray-300">
                   <span className="material-symbols-outlined text-lg">event_upcoming</span>
@@ -150,15 +150,15 @@ export default function DashboardScreen() {
 
           {/* Yesterday's Summary (Collapsible/Soft) */}
           <div className="mt-2">
-            <h3 className="text-sm font-bold text-lavender uppercase tracking-widest mb-3 pl-1">Yesterday</h3>
+            <h3 className="text-sm font-bold text-lavender uppercase tracking-widest mb-3 pl-1">Ontem</h3>
             <div className="bg-surface-light dark:bg-surface-dark rounded-xl p-4 shadow-card flex items-center justify-between opacity-80 hover:opacity-100 transition-opacity cursor-pointer">
               <div className="flex items-center gap-3">
                 <div className="bg-green-100 dark:bg-green-900/30 p-2 rounded-full text-green-600 dark:text-green-400">
                   <span className="material-symbols-outlined text-xl">check_circle</span>
                 </div>
                 <div>
-                  <p className="text-text-main dark:text-white font-bold text-sm">All Doses Logged</p>
-                  <p className="text-xs text-text-muted dark:text-gray-400">Leo had a good day</p>
+                  <p className="text-text-main dark:text-white font-bold text-sm">Todas as Doses Registradas</p>
+                  <p className="text-xs text-text-muted dark:text-gray-400">Leo teve um bom dia</p>
                 </div>
               </div>
               <span className="material-symbols-outlined text-lavender">chevron_right</span>
@@ -180,19 +180,19 @@ export default function DashboardScreen() {
               <div className="flex h-8 items-center justify-center text-text-main dark:text-white transition-colors group-hover:text-primary">
                 <span className="material-symbols-outlined text-[28px] filled" style={{ fontVariationSettings: "'FILL' 1" }}>home</span>
               </div>
-              <span className="text-[10px] font-bold text-text-main dark:text-white">Home</span>
+              <span className="text-[10px] font-bold text-text-main dark:text-white">Início</span>
             </a>
             <a className="flex flex-col items-center gap-1 group w-16" href="#">
               <div className="flex h-8 items-center justify-center text-text-muted dark:text-gray-500 transition-colors group-hover:text-primary">
                 <span className="material-symbols-outlined text-[28px]">history</span>
               </div>
-              <span className="text-[10px] font-medium text-text-muted dark:text-gray-500">History</span>
+              <span className="text-[10px] font-medium text-text-muted dark:text-gray-500">Histórico</span>
             </a>
             <a className="flex flex-col items-center gap-1 group w-16" href="#">
               <div className="flex h-8 items-center justify-center text-text-muted dark:text-gray-500 transition-colors group-hover:text-primary">
                 <span className="material-symbols-outlined text-[28px]">settings</span>
               </div>
-              <span className="text-[10px] font-medium text-text-muted dark:text-gray-500">Settings</span>
+              <span className="text-[10px] font-medium text-text-muted dark:text-gray-500">Configurações</span>
             </a>
           </div>
         </nav>

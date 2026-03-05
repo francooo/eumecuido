@@ -80,7 +80,7 @@ export default function ExpoConnectPage() {
                 2
               </span>
               <span>
-                Abra o Expo Go e toque em <strong>&quot;Scan QR code&quot;</strong>
+                Abra o Expo Go e toque em <strong>&quot;Escanear QR code&quot;</strong>
               </span>
             </li>
             <li className="flex gap-3">

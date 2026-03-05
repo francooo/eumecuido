@@ -17,20 +17,20 @@ export default function MedicineCabinetScreen() {
   const [medType, setMedType] = useState("liquid");
 
   const types = [
-    { key: "liquid", label: "Liquid", icon: "water-outline" as const },
-    { key: "tablet", label: "Tablet", icon: "medical-outline" as const },
-    { key: "other", label: "Other", icon: "medkit-outline" as const },
+    { key: "liquid", label: "Líquido", icon: "water-outline" as const },
+    { key: "tablet", label: "Comprimido", icon: "medical-outline" as const },
+    { key: "other", label: "Outro", icon: "medkit-outline" as const },
   ];
 
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()}>
-          <Text style={styles.cancelText}>Cancel</Text>
+          <Text style={styles.cancelText}>Cancelar</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Add Medication</Text>
+        <Text style={styles.headerTitle}>Adicionar Medicamento</Text>
         <TouchableOpacity style={styles.saveBtn}>
-          <Text style={styles.saveBtnText}>Save</Text>
+          <Text style={styles.saveBtnText}>Salvar</Text>
         </TouchableOpacity>
       </View>
 
@@ -41,7 +41,7 @@ export default function MedicineCabinetScreen() {
         <View style={styles.contextBanner}>
           <Ionicons name="happy-outline" size={16} color={colors.primary} />
           <Text style={styles.contextText}>
-            Adding for <Text style={{ fontWeight: "700" }}>Leo</Text>{" "}
+            Adicionando para <Text style={{ fontWeight: "700" }}>Leo</Text>{" "}
             <Text style={styles.contextWeight}>(14kg)</Text>
           </Text>
         </View>
@@ -50,18 +50,18 @@ export default function MedicineCabinetScreen() {
           <View style={styles.scanIcon}>
             <Ionicons name="camera-outline" size={32} color={colors.primary} />
           </View>
-          <Text style={styles.scanTitle}>Scan Label</Text>
+          <Text style={styles.scanTitle}>Escanear Rótulo</Text>
           <Text style={styles.scanSubtitle}>
-            Snap a photo of the box to auto-fill details instantly.
+            Tire uma foto da caixa para preencher os detalhes automaticamente.
           </Text>
           <View style={styles.aiBadge}>
-            <Text style={styles.aiBadgeText}>AI Enabled</Text>
+            <Text style={styles.aiBadgeText}>IA Habilitada</Text>
           </View>
         </TouchableOpacity>
 
         <View style={styles.formSection}>
           <View style={styles.fieldGroup}>
-            <Text style={styles.fieldLabel}>Medicine Name</Text>
+            <Text style={styles.fieldLabel}>Nome do Medicamento</Text>
             <View style={styles.inputRow}>
               <Ionicons
                 name="medical"
@@ -71,14 +71,14 @@ export default function MedicineCabinetScreen() {
               />
               <TextInput
                 style={styles.input}
-                placeholder="e.g. Ibuprofen"
+                placeholder="ex. Ibuprofeno"
                 placeholderTextColor={colors.slate400}
               />
             </View>
           </View>
 
           <View style={styles.fieldGroup}>
-            <Text style={styles.fieldLabel}>Type</Text>
+            <Text style={styles.fieldLabel}>Tipo</Text>
             <View style={styles.typeRow}>
               {types.map((t) => (
                 <TouchableOpacity
@@ -110,7 +110,7 @@ export default function MedicineCabinetScreen() {
           </View>
 
           <View style={styles.fieldGroup}>
-            <Text style={styles.fieldLabel}>Strength / Concentration</Text>
+            <Text style={styles.fieldLabel}>Dosagem / Concentração</Text>
             <View style={styles.strengthRow}>
               <View style={[styles.inputRow, { flex: 1 }]}>
                 <Ionicons
@@ -121,7 +121,7 @@ export default function MedicineCabinetScreen() {
                 />
                 <TextInput
                   style={styles.input}
-                  placeholder="e.g. 100"
+                  placeholder="ex. 100"
                   placeholderTextColor={colors.slate400}
                   keyboardType="numeric"
                 />
@@ -134,10 +134,10 @@ export default function MedicineCabinetScreen() {
           </View>
 
           <View style={styles.fieldGroup}>
-            <Text style={styles.fieldLabel}>Instructions / Notes</Text>
+            <Text style={styles.fieldLabel}>Instruções / Observações</Text>
             <TextInput
               style={styles.textarea}
-              placeholder="Take with food, keep refrigerated..."
+              placeholder="Tomar com alimento, manter refrigerado..."
               placeholderTextColor={colors.slate400}
               multiline
               numberOfLines={3}

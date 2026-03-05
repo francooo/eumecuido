@@ -26,25 +26,25 @@ export default function SafetyCheckScreen() {
           </View>
         </View>
 
-        <Text style={styles.title}>Just a moment</Text>
+        <Text style={styles.title}>Um momento</Text>
 
         <View style={styles.infoBox}>
           <Text style={styles.infoText}>
-            You logged{" "}
-            <Text style={styles.infoBold}>Ibuprofen</Text> 2 hours ago.
+            Você registrou{" "}
+            <Text style={styles.infoBold}>Ibuprofeno</Text> há 2 horas.
           </Text>
           <View style={styles.warningRow}>
             <Ionicons name="information-circle" size={18} color={colors.alertRose} />
             <Text style={styles.warningText}>
-              This medication usually requires a{" "}
-              <Text style={styles.warningHighlight}>6-hour gap</Text> between
-              doses to be safe.
+              Este medicamento geralmente requer um{" "}
+              <Text style={styles.warningHighlight}>intervalo de 6 horas</Text> entre
+              doses para ser seguro.
             </Text>
           </View>
         </View>
 
         <Text style={styles.confirmText}>
-          Are you sure you want to proceed?
+          Tem certeza?
         </Text>
 
         <View style={styles.actions}>
@@ -53,11 +53,11 @@ export default function SafetyCheckScreen() {
             onPress={() => router.back()}
           >
             <Ionicons name="close-circle" size={20} color={colors.primaryContent} />
-            <Text style={styles.primaryActionText}>Cancel & Wait</Text>
+            <Text style={styles.primaryActionText}>Cancelar e Aguardar</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.secondaryAction}>
-            <Text style={styles.secondaryActionText}>Log Anyway</Text>
+            <Text style={styles.secondaryActionText}>Registrar Mesmo Assim</Text>
           </TouchableOpacity>
         </View>
 

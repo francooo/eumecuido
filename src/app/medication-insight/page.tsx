@@ -24,10 +24,10 @@ export default function MedicationInsightScreen() {
             <div>
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-lavender/50 text-text-lavender mb-3">
                 <span className="material-symbols-outlined text-[16px]">smart_toy</span>
-                <span className="text-xs font-bold uppercase tracking-wider">AI Summary</span>
+                <span className="text-xs font-bold uppercase tracking-wider">Resumo IA</span>
               </div>
               <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">Amoxicillin</h1>
-              <p className="text-slate-500 text-sm mt-1">Oral Suspension • 250mg/5ml</p>
+              <p className="text-slate-500 text-sm mt-1">Suspensão Oral • 250mg/5ml</p>
             </div>
             <button className="p-2 rounded-full hover:bg-gray-100 text-slate-400 transition-colors">
               <span className="material-symbols-outlined">close</span>
@@ -47,7 +47,7 @@ export default function MedicationInsightScreen() {
             <div className="relative z-10">
               <div className="flex items-center gap-2 text-primary-dark mb-2 opacity-90">
                 <span className="material-symbols-outlined text-xl">calculate</span>
-                <span className="text-xs font-bold tracking-widest uppercase">Calculated Safe Dose</span>
+                <span className="text-xs font-bold tracking-widest uppercase">Dose Segura Calculada</span>
               </div>
 
               <div className="flex items-baseline gap-1 mt-4">
@@ -65,8 +65,8 @@ export default function MedicationInsightScreen() {
                     <span className="material-symbols-outlined">schedule</span>
                   </div>
                   <div>
-                    <p className="text-xs text-primary-dark font-bold uppercase tracking-wide">Frequency</p>
-                    <p className="text-slate-900 font-bold">Every 8 hours</p>
+                    <p className="text-xs text-primary-dark font-bold uppercase tracking-wide">Frequência</p>
+                    <p className="text-slate-900 font-bold">A cada 8 horas</p>
                   </div>
                 </div>
                 <div className="h-8 w-[1px] bg-slate-900/10"></div>
@@ -75,19 +75,19 @@ export default function MedicationInsightScreen() {
                     <span className="material-symbols-outlined">calendar_today</span>
                   </div>
                   <div>
-                    <p className="text-xs text-primary-dark font-bold uppercase tracking-wide">Duration</p>
-                    <p className="text-slate-900 font-bold">5 Days</p>
+                    <p className="text-xs text-primary-dark font-bold uppercase tracking-wide">Duração</p>
+                    <p className="text-slate-900 font-bold">5 Dias</p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* "Watch Out" Section */}
+          {/* "Atenção" Section */}
           <div className="mb-8">
             <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-4 flex items-center gap-2">
               <span className="material-symbols-outlined text-text-rose">gpp_maybe</span>
-              Watch Out
+              Atenção
             </h2>
             <div className="bg-soft-rose rounded-[28px] p-6 border border-rose-100">
               <ul className="space-y-4">
@@ -96,7 +96,7 @@ export default function MedicationInsightScreen() {
                     <span className="material-symbols-outlined text-[16px]">restaurant</span>
                   </div>
                   <div>
-                    <p className="text-slate-800 font-medium">Take with food</p>
+                    <p className="text-slate-800 font-medium">Tomar com alimento</p>
                     <p className="text-slate-500 text-sm leading-relaxed mt-1">To avoid tummy aches, it&apos;s best to give this dose right after a meal or snack.</p>
                   </div>
                 </li>
@@ -105,7 +105,7 @@ export default function MedicationInsightScreen() {
                     <span className="material-symbols-outlined text-[16px]">bedtime</span>
                   </div>
                   <div>
-                    <p className="text-slate-800 font-medium">May cause drowsiness</p>
+                    <p className="text-slate-800 font-medium">Pode causar sonolência</p>
                     <p className="text-slate-500 text-sm leading-relaxed mt-1">Leo might be a bit sleepier than usual. Monitor during playtime.</p>
                   </div>
                 </li>
@@ -117,7 +117,7 @@ export default function MedicationInsightScreen() {
           <div className="text-center mb-6">
             <button className="inline-flex items-center gap-2 text-slate-400 hover:text-primary transition-colors text-sm font-medium py-2 px-4 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800">
               <span className="material-symbols-outlined text-[18px]">description</span>
-              Read official leaflet (PDF)
+              Ler bula oficial (PDF)
             </button>
           </div>
         </div>
@@ -126,7 +126,7 @@ export default function MedicationInsightScreen() {
         <div className="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-background-light via-background-light to-transparent dark:from-background-dark dark:via-background-dark pt-12">
           <button className="w-full bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 py-4 rounded-full font-bold text-lg shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-transform flex items-center justify-center gap-2">
             <span className="material-symbols-outlined">check_circle</span>
-            Got it, Thanks
+            Entendi, Obrigado
           </button>
         </div>
       </main>

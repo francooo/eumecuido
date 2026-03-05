@@ -9,8 +9,8 @@ export default function SafetyCheckScreen() {
         <div className="p-6 pb-2">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-200">Good Morning, Sarah</h1>
-              <p className="text-slate-500 text-sm font-medium tracking-wide">WED, OCT 24</p>
+              <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-200">Bom Dia, Sarah</h1>
+              <p className="text-slate-500 text-sm font-medium tracking-wide">QUA, OUT 24</p>
             </div>
             <div className="h-12 w-12 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
               <img alt="User profile avatar" className="h-full w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCiLR7lsGB3jXY2I4_W5FG3oao3m7ugSAowYWI-GRZrXkjyZ7_I3n_Im-JmHadXWV1xfCfBs-lTE_yidez2jXU2nGv2s0FWHE1HnhRjw8VsdUbi6bvjdaOftLcwbUWISuFUqUyEawwNUIXpfPSqaPLZiAERy7QOwJbWaCs8QFAucZHu4RKFAQ8Axv2g0KVVSDZROyoCBzNh1pbrer82v8DYL5IkP-C2q_yIsBdxkvjjG7-EoOLqv3iNwqjaw7o4yuwx0kmoBetNEfY" />
@@ -65,21 +65,21 @@ export default function SafetyCheckScreen() {
             {/* Text Content */}
             <div className="space-y-4 mb-8">
               <h2 className="text-3xl font-bold text-text-main dark:text-slate-100 tracking-tight leading-tight">
-                Just a moment
+                Um momento
               </h2>
               <div className="bg-white dark:bg-black/20 rounded-xl p-4 text-left border border-slate-100 dark:border-white/5">
                 <p className="text-slate-600 dark:text-slate-300 text-base leading-relaxed">
-                  You logged <strong className="text-slate-900 dark:text-white font-semibold">Ibuprofen</strong> 2 hours ago.
+                  Você registrou <strong className="text-slate-900 dark:text-white font-semibold">Ibuprofeno</strong> há 2 horas.
                 </p>
                 <div className="mt-3 flex items-start gap-3">
                   <span className="material-symbols-outlined text-alert-rose text-lg mt-0.5">info</span>
                   <p className="text-sm text-slate-500 dark:text-slate-400 leading-snug">
-                    This medication usually requires a <span className="font-semibold text-alert-rose">6-hour gap</span> between doses to be safe.
+                    Este medicamento geralmente requer um <span className="font-semibold text-alert-rose">intervalo de 6 horas</span> entre doses para ser seguro.
                   </p>
                 </div>
               </div>
               <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">
-                Are you sure you want to proceed?
+                Tem certeza que deseja continuar?
               </p>
             </div>
 
@@ -89,11 +89,11 @@ export default function SafetyCheckScreen() {
               <button className="group relative flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-full h-14 px-8 bg-primary text-primary-content text-base font-bold leading-normal tracking-wide shadow-soft hover:shadow-lg transition-all active:scale-[0.98]">
                 <span className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity"></span>
                 <span className="material-symbols-outlined mr-2">cancel</span>
-                <span>Cancel & Wait</span>
+                <span>Cancelar e Aguardar</span>
               </button>
               {/* Secondary Action (Risky Choice) */}
               <button className="flex w-full cursor-pointer items-center justify-center rounded-full h-12 px-6 text-slate-400 dark:text-slate-500 text-sm font-semibold hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors">
-                <span>Log Anyway</span>
+                <span>Registrar Mesmo Assim</span>
               </button>
             </div>
           </div>

@@ -40,8 +40,8 @@ export default function DashboardScreen() {
     <SafeAreaView style={styles.container} edges={["top"]}>
       <View style={styles.header}>
         <View>
-          <Text style={styles.greeting}>Good Morning, Sarah</Text>
-          <Text style={styles.date}>OCT 24 • THURSDAY</Text>
+          <Text style={styles.greeting}>Bom Dia, Sarah</Text>
+          <Text style={styles.date}>OUT 24 • QUINTA-FEIRA</Text>
         </View>
         <TouchableOpacity style={styles.notifButton}>
           <Ionicons name="notifications-outline" size={26} color={colors.textMuted} />
@@ -74,7 +74,7 @@ export default function DashboardScreen() {
           <View style={styles.addProfileCircle}>
             <Ionicons name="add" size={24} color={colors.lavender} />
           </View>
-          <Text style={styles.profileName}>Add</Text>
+          <Text style={styles.profileName}>Adicionar</Text>
         </View>
       </ScrollView>
 
@@ -97,12 +97,12 @@ export default function DashboardScreen() {
                 </View>
                 <View>
                   <Text style={styles.medName}>Amoxicillin</Text>
-                  <Text style={styles.medDetail}>5ml • Liquid</Text>
+                  <Text style={styles.medDetail}>5ml • Líquido</Text>
                 </View>
               </View>
               <View style={styles.dueBadge}>
                 <Ionicons name="time-outline" size={12} color={colors.alertRose} />
-                <Text style={styles.dueText}>Due 9:00 AM</Text>
+                <Text style={styles.dueText}>Às 9:00</Text>
               </View>
             </View>
             <View style={styles.doseCardBottom}>
@@ -111,7 +111,7 @@ export default function DashboardScreen() {
                 onPress={() => router.push("/log-dose")}
               >
                 <Ionicons name="checkmark" size={18} color={colors.primaryContent} />
-                <Text style={styles.logNowText}>Log Now</Text>
+                <Text style={styles.logNowText}>Registrar</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -125,7 +125,7 @@ export default function DashboardScreen() {
           >
             <View style={styles.widgetHeader}>
               <View>
-                <Text style={styles.widgetLabel}>Weight</Text>
+                <Text style={styles.widgetLabel}>Peso</Text>
                 <Text style={styles.widgetValue}>
                   14.2<Text style={styles.widgetUnit}>kg</Text>
                 </Text>
@@ -134,7 +134,7 @@ export default function DashboardScreen() {
                 <Ionicons name="scale-outline" size={18} color={colors.primary} />
               </View>
             </View>
-            <Text style={styles.widgetFooter}>+0.4kg since last check</Text>
+            <Text style={styles.widgetFooter}>+0.4kg desde a última verificação</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -144,9 +144,9 @@ export default function DashboardScreen() {
           >
             <View style={styles.widgetHeader}>
               <View>
-                <Text style={styles.widgetLabel}>Upcoming</Text>
+                <Text style={styles.widgetLabel}>Próximos</Text>
                 <Text style={styles.widgetValueSm}>Ibuprofen</Text>
-                <Text style={styles.widgetSub}>Tablet • 200mg</Text>
+                <Text style={styles.widgetSub}>Comprimido • 200mg</Text>
               </View>
               <View style={[styles.widgetIconBg, { backgroundColor: colors.lavenderLight }]}>
                 <Ionicons name="calendar-outline" size={18} color={colors.lavender} />
@@ -160,15 +160,15 @@ export default function DashboardScreen() {
         </View>
 
         <View style={styles.yesterdaySection}>
-          <Text style={styles.sectionTitle}>Yesterday</Text>
+          <Text style={styles.sectionTitle}>Ontem</Text>
           <TouchableOpacity style={styles.yesterdayCard} activeOpacity={0.8}>
             <View style={styles.yesterdayLeft}>
               <View style={styles.checkCircle}>
                 <Ionicons name="checkmark-circle" size={22} color="#16a34a" />
               </View>
               <View>
-                <Text style={styles.yesterdayTitle}>All Doses Logged</Text>
-                <Text style={styles.yesterdaySubtitle}>Leo had a good day</Text>
+                <Text style={styles.yesterdayTitle}>Todas as Doses Registradas</Text>
+                <Text style={styles.yesterdaySubtitle}>Leo teve um bom dia</Text>
               </View>
             </View>
             <Ionicons name="chevron-forward" size={20} color={colors.lavender} />

@@ -27,7 +27,7 @@ export default function LogDoseScreen() {
         >
           <Ionicons name="close" size={28} color={colors.slate900} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Log Dose</Text>
+        <Text style={styles.headerTitle}>Registrar Dose</Text>
         <View style={{ width: 40 }} />
       </View>
 
@@ -43,16 +43,16 @@ export default function LogDoseScreen() {
             <Text style={styles.medCardName}>Ibuprofen</Text>
             <View style={styles.medCardProfile}>
               <Ionicons name="happy-outline" size={14} color={colors.gentleSage} />
-              <Text style={styles.medCardProfileText}>For Leo</Text>
+              <Text style={styles.medCardProfileText}>Para Leo</Text>
             </View>
           </View>
           <TouchableOpacity style={styles.editBtn}>
-            <Text style={styles.editBtnText}>Edit</Text>
+            <Text style={styles.editBtnText}>Editar</Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.dosageSection}>
-          <Text style={styles.sectionLabel}>How much?</Text>
+          <Text style={styles.sectionLabel}>Quanto?</Text>
           <View style={styles.dosageRow}>
             <TouchableOpacity
               style={styles.stepperBtn}
@@ -84,9 +84,9 @@ export default function LogDoseScreen() {
 
         <View style={styles.weightSection}>
           <View style={styles.weightHeader}>
-            <Text style={styles.sectionLabel}>Current Weight</Text>
+            <Text style={styles.sectionLabel}>Peso Atual</Text>
             <View style={styles.verifiedBadge}>
-              <Text style={styles.verifiedText}>Verified 2d ago</Text>
+              <Text style={styles.verifiedText}>Verificado há 2d</Text>
             </View>
           </View>
           <TouchableOpacity
@@ -101,23 +101,23 @@ export default function LogDoseScreen() {
                 <Text style={styles.weightValue}>
                   14 <Text style={styles.weightUnit}>kg</Text>
                 </Text>
-                <Text style={styles.weightSafe}>Safe dose: 4.5 - 7ml</Text>
+                <Text style={styles.weightSafe}>Dose segura: 4.5 - 7ml</Text>
               </View>
             </View>
             <TouchableOpacity style={styles.confirmBtn}>
-              <Text style={styles.confirmBtnText}>Confirm</Text>
+              <Text style={styles.confirmBtnText}>Confirmar</Text>
             </TouchableOpacity>
           </TouchableOpacity>
         </View>
 
         <View style={styles.timeSection}>
-          <Text style={styles.sectionLabel}>Time given</Text>
+          <Text style={styles.sectionLabel}>Horário</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             <View style={styles.timeRow}>
               {[
-                { key: "now", label: "Just now", icon: "time-outline" as const },
-                { key: "15m", label: "15m ago" },
-                { key: "30m", label: "30m ago" },
+                { key: "now", label: "Agora", icon: "time-outline" as const },
+                { key: "15m", label: "15m atrás" },
+                { key: "30m", label: "30m atrás" },
               ].map((t) => (
                 <TouchableOpacity
                   key={t.key}
@@ -155,9 +155,9 @@ export default function LogDoseScreen() {
           onPress={() => router.back()}
         >
           <Ionicons name="checkmark-circle" size={22} color={colors.slate900} />
-          <Text style={styles.saveText}>Save Log</Text>
+          <Text style={styles.saveText}>Salvar Registro</Text>
         </TouchableOpacity>
-        <Text style={styles.nextDoseHint}>Next dose will be in 6 hours</Text>
+        <Text style={styles.nextDoseHint}>Próxima dose em 6 horas</Text>
       </View>
     </SafeAreaView>
   );

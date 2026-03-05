@@ -31,8 +31,8 @@ export default function WeightCheckScreen() {
         </View>
 
         <View style={styles.headerSection}>
-          <Text style={styles.title}>Let's be precise</Text>
-          <Text style={styles.subtitle}>What is Leo's current weight?</Text>
+          <Text style={styles.title}>Vamos ser precisos</Text>
+          <Text style={styles.subtitle}>Qual é o peso atual de Leo?</Text>
         </View>
 
         <View style={styles.weightSection}>
@@ -66,7 +66,7 @@ export default function WeightCheckScreen() {
           <View style={styles.lastLogged}>
             <Ionicons name="time-outline" size={14} color={colors.primary} />
             <Text style={styles.lastLoggedText}>
-              Last logged: 14.0kg (2 weeks ago)
+              Último registro: 14.0kg (2 semanas atrás)
             </Text>
           </View>
         </View>
@@ -74,8 +74,8 @@ export default function WeightCheckScreen() {
         <View style={styles.disclaimer}>
           <Ionicons name="information-circle" size={18} color="#ef4444" />
           <Text style={styles.disclaimerText}>
-            Safety first: Dosage will be strictly calculated based on this
-            value. Please verify it's current.
+            Segurança em primeiro lugar: A dosagem será calculada com base neste
+            valor. Verifique se está atualizado.
           </Text>
         </View>
 
@@ -83,7 +83,7 @@ export default function WeightCheckScreen() {
           style={styles.calcButton}
           onPress={() => router.back()}
         >
-          <Text style={styles.calcButtonText}>Calculate Safe Dose</Text>
+          <Text style={styles.calcButtonText}>Calcular Dose Segura</Text>
           <Ionicons name="arrow-forward" size={20} color={colors.primaryContent} />
         </TouchableOpacity>
       </View>

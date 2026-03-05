@@ -11,8 +11,8 @@ export default function LogDoseScreen() {
           <button className="text-slate-900 dark:text-slate-100 p-2 rounded-full hover:bg-background-light dark:hover:bg-background-dark transition-colors">
             <span className="material-symbols-outlined text-3xl">close</span>
           </button>
-          <h1 className="text-slate-900 dark:text-slate-100 text-lg font-bold tracking-tight">Log Dose</h1>
-          <div className="w-10"></div> {/* Spacer for visual balance */}
+          <h1 className="text-slate-900 dark:text-slate-100 text-lg font-bold tracking-tight">Registrar Dose</h1>
+          <div className="w-10"></div>
         </header>
 
         {/* Content Scroll Area */}
@@ -31,17 +31,17 @@ export default function LogDoseScreen() {
               <h2 className="text-slate-900 dark:text-slate-100 text-xl font-bold leading-tight">Ibuprofen</h2>
               <div className="flex items-center gap-1 mt-1">
                 <span className="material-symbols-outlined text-gentle-sage text-sm">child_care</span>
-                <p className="text-gentle-sage font-medium text-sm">For Leo</p>
+                <p className="text-gentle-sage font-medium text-sm">Para Leo</p>
               </div>
             </div>
             <button className="bg-white dark:bg-[#1a332d] text-slate-900 dark:text-slate-100 px-4 py-2 rounded-full text-sm font-semibold shadow-sm border border-slate-100 dark:border-slate-800">
-              Edit
+              Editar
             </button>
           </div>
 
           {/* Dosage Section */}
           <div className="mb-10">
-            <label className="block text-slate-500 dark:text-slate-400 text-sm font-bold uppercase tracking-wider mb-6 text-center">How much?</label>
+            <label className="block text-slate-500 dark:text-slate-400 text-sm font-bold uppercase tracking-wider mb-6 text-center">Quanto?</label>
             <div className="flex items-center justify-between gap-4">
               {/* Minus Button */}
               <button className="w-16 h-16 rounded-full bg-background-light dark:bg-background-dark text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 flex items-center justify-center transition-all hover:scale-105 active:scale-95 shadow-inner-soft">
@@ -82,8 +82,8 @@ export default function LogDoseScreen() {
           {/* Weight Check Section */}
           <div className="mb-8">
             <div className="flex items-center justify-between mb-3 px-2">
-              <label className="text-slate-500 dark:text-slate-400 text-sm font-bold uppercase tracking-wider">Current Weight</label>
-              <span className="text-xs text-gentle-sage bg-primary/10 px-2 py-1 rounded-full">Verified 2d ago</span>
+              <label className="text-slate-500 dark:text-slate-400 text-sm font-bold uppercase tracking-wider">Peso Atual</label>
+              <span className="text-xs text-gentle-sage bg-primary/10 px-2 py-1 rounded-full">Verificado há 2d</span>
             </div>
             <div className="bg-primary/10 dark:bg-primary/5 rounded-[2rem] p-5 flex items-center justify-between border border-primary/20 transition-all active:scale-[0.99]">
               <div className="flex items-center gap-3">
@@ -92,11 +92,11 @@ export default function LogDoseScreen() {
                 </div>
                 <div>
                   <span className="block text-2xl font-bold text-slate-900 dark:text-slate-100 leading-none">14 <span className="text-base text-slate-500 font-medium">kg</span></span>
-                  <span className="text-xs text-slate-500 dark:text-slate-400">Safe dose: 4.5 - 7ml</span>
+                  <span className="text-xs text-slate-500 dark:text-slate-400">Dose segura: 4.5 - 7ml</span>
                 </div>
               </div>
               <button className="text-slate-900 dark:text-slate-100 font-bold text-sm bg-white dark:bg-[#1a332d] px-4 py-2 rounded-full shadow-sm">
-                Confirm
+                Confirmar
               </button>
             </div>
           </div>
@@ -104,21 +104,21 @@ export default function LogDoseScreen() {
           {/* Time Picker */}
           <div className="mb-6">
             <div className="flex items-center justify-between mb-3 px-2">
-              <label className="text-slate-500 dark:text-slate-400 text-sm font-bold uppercase tracking-wider">Time given</label>
+              <label className="text-slate-500 dark:text-slate-400 text-sm font-bold uppercase tracking-wider">Horário</label>
             </div>
             <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2">
-              {/* Option: Just Now (Active) */}
+              {/* Option: Agora (Active) */}
               <button className="flex-shrink-0 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 px-6 py-3 rounded-full font-bold text-sm shadow-lg shadow-slate-200 dark:shadow-none flex items-center gap-2">
                 <span className="material-symbols-outlined text-lg">schedule</span>
-                Just now
+                Agora
               </button>
-              {/* Option: 15m ago */}
+              {/* Option: 15m atrás */}
               <button className="flex-shrink-0 bg-background-light dark:bg-background-dark text-slate-500 dark:text-slate-400 px-6 py-3 rounded-full font-bold text-sm border border-transparent hover:border-slate-200 dark:hover:border-slate-700">
-                15m ago
+                15m atrás
               </button>
-              {/* Option: 30m ago */}
+              {/* Option: 30m atrás */}
               <button className="flex-shrink-0 bg-background-light dark:bg-background-dark text-slate-500 dark:text-slate-400 px-6 py-3 rounded-full font-bold text-sm border border-transparent hover:border-slate-200 dark:hover:border-slate-700">
-                30m ago
+                30m atrás
               </button>
             </div>
           </div>
@@ -129,9 +129,9 @@ export default function LogDoseScreen() {
         <div className="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-white via-white to-transparent dark:from-[#152a25] dark:via-[#152a25] pt-12">
           <button className="w-full bg-primary hover:bg-[#25dcb0] text-slate-900 h-16 rounded-full font-bold text-lg shadow-xl shadow-primary/25 flex items-center justify-center gap-2 transition-all transform active:scale-[0.98]">
             <span className="material-symbols-outlined">check_circle</span>
-            Save Log
+            Salvar Registro
           </button>
-          <p className="text-center text-xs text-slate-400 mt-4 font-medium">Next dose will be in 6 hours</p>
+          <p className="text-center text-xs text-slate-400 mt-4 font-medium">Próxima dose em 6 horas</p>
         </div>
       </div>
     </div>

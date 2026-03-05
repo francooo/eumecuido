@@ -22,10 +22,10 @@ export default function MedicationInsightScreen() {
         <View>
           <View style={styles.aiBadge}>
             <Ionicons name="sparkles" size={14} color={colors.lavender} />
-            <Text style={styles.aiBadgeText}>AI Summary</Text>
+            <Text style={styles.aiBadgeText}>Resumo IA</Text>
           </View>
           <Text style={styles.title}>Amoxicillin</Text>
-          <Text style={styles.subtitle}>Oral Suspension • 250mg/5ml</Text>
+          <Text style={styles.subtitle}>Suspensão Oral • 250mg/5ml</Text>
         </View>
         <TouchableOpacity
           onPress={() => router.back()}
@@ -46,7 +46,7 @@ export default function MedicationInsightScreen() {
           <View style={styles.doseCardInner}>
             <View style={styles.doseCalcHeader}>
               <Ionicons name="calculator-outline" size={18} color={colors.primaryContent} />
-              <Text style={styles.doseCalcLabel}>Calculated Safe Dose</Text>
+              <Text style={styles.doseCalcLabel}>Dose Segura Calculada</Text>
             </View>
 
             <View style={styles.doseRange}>
@@ -64,8 +64,8 @@ export default function MedicationInsightScreen() {
                   <Ionicons name="time-outline" size={20} color={colors.slate900} />
                 </View>
                 <View>
-                  <Text style={styles.infoLabel}>Frequency</Text>
-                  <Text style={styles.infoValue}>Every 8 hours</Text>
+                  <Text style={styles.infoLabel}>Frequência</Text>
+                  <Text style={styles.infoValue}>A cada 8 horas</Text>
                 </View>
               </View>
               <View style={styles.infoDivider} />
@@ -74,8 +74,8 @@ export default function MedicationInsightScreen() {
                   <Ionicons name="calendar-outline" size={20} color={colors.slate900} />
                 </View>
                 <View>
-                  <Text style={styles.infoLabel}>Duration</Text>
-                  <Text style={styles.infoValue}>5 Days</Text>
+                  <Text style={styles.infoLabel}>Duração</Text>
+                  <Text style={styles.infoValue}>5 Dias</Text>
                 </View>
               </View>
             </View>
@@ -85,7 +85,7 @@ export default function MedicationInsightScreen() {
         <View style={styles.watchOutSection}>
           <View style={styles.watchOutHeader}>
             <Ionicons name="warning-outline" size={22} color={colors.textRose} />
-            <Text style={styles.watchOutTitle}>Watch Out</Text>
+            <Text style={styles.watchOutTitle}>Atenção</Text>
           </View>
           <View style={styles.watchOutCard}>
             <View style={styles.watchOutItem}>
@@ -93,9 +93,9 @@ export default function MedicationInsightScreen() {
                 <Ionicons name="restaurant-outline" size={14} color={colors.textRose} />
               </View>
               <View style={styles.watchOutText}>
-                <Text style={styles.watchOutItemTitle}>Take with food</Text>
+                <Text style={styles.watchOutItemTitle}>Tomar com alimento</Text>
                 <Text style={styles.watchOutItemDesc}>
-                  To avoid tummy aches, give this dose right after a meal or snack.
+                  Para evitar dor de barriga, dê esta dose logo após uma refeição ou lanche.
                 </Text>
               </View>
             </View>
@@ -104,9 +104,9 @@ export default function MedicationInsightScreen() {
                 <Ionicons name="moon-outline" size={14} color={colors.textRose} />
               </View>
               <View style={styles.watchOutText}>
-                <Text style={styles.watchOutItemTitle}>May cause drowsiness</Text>
+                <Text style={styles.watchOutItemTitle}>Pode causar sonolência</Text>
                 <Text style={styles.watchOutItemDesc}>
-                  Leo might be a bit sleepier than usual. Monitor during playtime.
+                  Leo pode ficar um pouco mais sonolento que o normal. Monitore durante as brincadeiras.
                 </Text>
               </View>
             </View>
@@ -115,7 +115,7 @@ export default function MedicationInsightScreen() {
 
         <TouchableOpacity style={styles.leafletBtn}>
           <Ionicons name="document-text-outline" size={18} color={colors.slate400} />
-          <Text style={styles.leafletText}>Read official leaflet (PDF)</Text>
+          <Text style={styles.leafletText}>Ler bula oficial (PDF)</Text>
         </TouchableOpacity>
       </ScrollView>
 
@@ -125,7 +125,7 @@ export default function MedicationInsightScreen() {
           onPress={() => router.back()}
         >
           <Ionicons name="checkmark-circle" size={22} color={colors.white} />
-          <Text style={styles.gotItText}>Got it, Thanks</Text>
+          <Text style={styles.gotItText}>Entendi, Obrigado</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

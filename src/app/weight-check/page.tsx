@@ -8,7 +8,7 @@ export default function WeightCheckScreen() {
         {/* Top Bar */}
         <div className="flex items-center justify-between p-6">
           <div className="flex flex-col">
-            <span className="text-sm font-bold text-text-muted">GOOD MORNING</span>
+            <span className="text-sm font-bold text-text-muted">BOM DIA</span>
             <span className="text-xl font-bold text-text-main dark:text-white">Sarah & Leo</span>
           </div>
           <div className="h-10 w-10 bg-primary/20 rounded-full"></div>
@@ -36,8 +36,8 @@ export default function WeightCheckScreen() {
 
         {/* Header Section */}
         <div className="text-center space-y-2">
-          <h1 className="text-3xl font-bold text-text-main dark:text-white tracking-tight">Let&apos;s be precise</h1>
-          <p className="text-text-muted text-lg font-medium">What is Leo&apos;s current weight?</p>
+          <h1 className="text-3xl font-bold text-text-main dark:text-white tracking-tight">Vamos ser precisos</h1>
+          <p className="text-text-muted text-lg font-medium">Qual é o peso atual de Leo?</p>
         </div>
 
         {/* Weight Input Section */}
@@ -45,7 +45,7 @@ export default function WeightCheckScreen() {
           {/* Large Input Area with Steppers */}
           <div className="flex items-center justify-center gap-4 w-full">
             {/* Minus Button */}
-            <button aria-label="Decrease weight" className="h-12 w-12 rounded-full bg-background-light dark:bg-background-dark text-text-muted hover:text-primary hover:bg-primary/10 flex items-center justify-center transition-all active:scale-95">
+            <button aria-label="Diminuir peso" className="h-12 w-12 rounded-full bg-background-light dark:bg-background-dark text-text-muted hover:text-primary hover:bg-primary/10 flex items-center justify-center transition-all active:scale-95">
               <span className="material-symbols-outlined">remove</span>
             </button>
 
@@ -67,7 +67,7 @@ export default function WeightCheckScreen() {
             </div>
 
             {/* Plus Button */}
-            <button aria-label="Increase weight" className="h-12 w-12 rounded-full bg-background-light dark:bg-background-dark text-text-muted hover:text-primary hover:bg-primary/10 flex items-center justify-center transition-all active:scale-95">
+            <button aria-label="Aumentar peso" className="h-12 w-12 rounded-full bg-background-light dark:bg-background-dark text-text-muted hover:text-primary hover:bg-primary/10 flex items-center justify-center transition-all active:scale-95">
               <span className="material-symbols-outlined">add</span>
             </button>
           </div>
@@ -75,7 +75,7 @@ export default function WeightCheckScreen() {
           {/* Contextual Info */}
           <div className="bg-primary/10 dark:bg-primary/5 rounded-lg px-4 py-2 flex items-center gap-2">
             <span className="material-symbols-outlined text-primary text-sm">history</span>
-            <span className="text-sm font-medium text-text-muted">Last logged: 14.0kg (2 weeks ago)</span>
+            <span className="text-sm font-medium text-text-muted">Último registro: 14.0kg (2 semanas atrás)</span>
           </div>
         </div>
 
@@ -83,13 +83,13 @@ export default function WeightCheckScreen() {
         <div className="bg-red-50 dark:bg-red-900/10 p-4 rounded-lg w-full flex items-start gap-3 border border-red-100 dark:border-red-900/20">
           <span className="material-symbols-outlined text-red-400 shrink-0" style={{ fontSize: '20px' }}>info</span>
           <p className="text-sm text-red-800 dark:text-red-200 leading-snug">
-            Safety first: Dosage will be strictly calculated based on this value. Please verify it&apos;s current.
+            Segurança em primeiro lugar: A dosagem será rigorosamente calculada com base neste valor. Por favor, verifique se está atualizado.
           </p>
         </div>
 
         {/* Action Button */}
         <button className="w-full bg-primary hover:bg-[#25dcb0] text-primary-content font-bold text-lg py-4 rounded-full shadow-lg shadow-primary/25 transition-all active:scale-[0.98] flex items-center justify-center gap-2 group">
-          <span>Calculate Safe Dose</span>
+          <span>Calcular Dose Segura</span>
           <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
         </button>
       </main>

@@ -1,6 +1,6 @@
 # Gentle Care Tracker
 
-A Next.js medication and health tracking app for managing family care, with a React Native/Expo mobile companion app.
+A Next.js medication and health tracking app for managing family care, with a React Native/Expo mobile companion app. Fully localized in Brazilian Portuguese (pt-BR).
 
 ## Tech Stack
 

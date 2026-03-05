@@ -12,7 +12,7 @@ export default function HistoryScreen() {
             <button className="group flex h-10 w-10 items-center justify-center rounded-full bg-white dark:bg-white/5 border border-slate-100 dark:border-white/10 shadow-sm transition-transform active:scale-95">
               <span className="material-symbols-outlined text-slate-600 dark:text-slate-300">arrow_back</span>
             </button>
-            <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">History Log</h1>
+            <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Histórico</h1>
             <button className="group flex h-10 w-10 items-center justify-center rounded-full bg-white dark:bg-white/5 border border-slate-100 dark:border-white/10 shadow-sm transition-transform active:scale-95">
               <span className="material-symbols-outlined text-slate-600 dark:text-slate-300">filter_list</span>
             </button>
@@ -22,7 +22,7 @@ export default function HistoryScreen() {
           <div className="no-scrollbar flex gap-3 overflow-x-auto px-6 pb-2 pt-1">
             {/* Active Filter */}
             <button className="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-primary px-5 shadow-soft transition-transform active:scale-95">
-              <span className="text-slate-900 text-sm font-bold">All</span>
+              <span className="text-slate-900 text-sm font-bold">Todos</span>
             </button>
             {/* Inactive Filters */}
             <button className="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-white dark:bg-white/5 border border-slate-100 dark:border-white/10 px-5 transition-transform active:scale-95 hover:bg-slate-50 dark:hover:bg-white/10">
@@ -44,7 +44,7 @@ export default function HistoryScreen() {
         <main className="flex-1 overflow-y-auto px-6 pb-28 pt-2">
           {/* Group: Today */}
           <div className="mb-6">
-            <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 pl-2">Today</h3>
+            <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 pl-2">Hoje</h3>
             <div className="flex flex-col gap-3">
 
               {/* Card 1: Medicine */}
@@ -71,7 +71,7 @@ export default function HistoryScreen() {
                     <span className="material-symbols-outlined">monitor_weight</span>
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-base font-bold text-slate-800 dark:text-white leading-tight">Weight Check</span>
+                    <span className="text-base font-bold text-slate-800 dark:text-white leading-tight">Verificação de Peso</span>
                     <span className="text-sm font-medium text-slate-500 dark:text-slate-400">14.2kg • Leo</span>
                   </div>
                 </div>
@@ -84,7 +84,7 @@ export default function HistoryScreen() {
 
           {/* Group: Yesterday */}
           <div className="mb-6">
-            <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 pl-2">Yesterday</h3>
+            <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 pl-2">Ontem</h3>
             <div className="flex flex-col gap-3">
 
               {/* Card 3: Medicine */}
@@ -110,7 +110,7 @@ export default function HistoryScreen() {
                     <span className="material-symbols-outlined">thermometer</span>
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-base font-bold text-slate-800 dark:text-white leading-tight">Temperature</span>
+                    <span className="text-base font-bold text-slate-800 dark:text-white leading-tight">Temperatura</span>
                     <span className="text-sm font-medium text-slate-500 dark:text-slate-400">38.5°C • Leo</span>
                   </div>
                 </div>
@@ -127,8 +127,8 @@ export default function HistoryScreen() {
                     <span className="material-symbols-outlined">sticky_note_2</span>
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-base font-bold text-slate-800 dark:text-white leading-tight">Doctor Note</span>
-                    <span className="text-sm font-medium text-slate-500 dark:text-slate-400">&quot;Drink plenty of water&quot;</span>
+                    <span className="text-base font-bold text-slate-800 dark:text-white leading-tight">Nota do Médico</span>
+                    <span className="text-sm font-medium text-slate-500 dark:text-slate-400">&quot;Beber bastante água&quot;</span>
                   </div>
                 </div>
                 <div className="flex flex-col items-end">
@@ -140,7 +140,7 @@ export default function HistoryScreen() {
 
           {/* Filler content to show scrolling */}
           <div className="h-12 flex items-center justify-center">
-            <span className="text-xs text-slate-300 dark:text-slate-700 italic">End of history for this week</span>
+            <span className="text-xs text-slate-300 dark:text-slate-700 italic">Fim do histórico desta semana</span>
           </div>
         </main>
 
@@ -148,7 +148,7 @@ export default function HistoryScreen() {
         <div className="fixed bottom-24 left-0 right-0 z-20 flex justify-center px-6 md:absolute">
           <button className="flex w-full max-w-sm items-center justify-center gap-3 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 py-4 shadow-lg shadow-slate-900/10 transition-transform active:scale-95">
             <span className="material-symbols-outlined text-[20px]">ios_share</span>
-            <span className="text-base font-bold">Share with Doctor</span>
+            <span className="text-base font-bold">Compartilhar com Médico</span>
           </button>
         </div>
 
@@ -156,11 +156,11 @@ export default function HistoryScreen() {
         <nav className="fixed bottom-0 w-full md:absolute z-30 flex gap-2 border-t border-slate-100 dark:border-white/5 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md px-4 pb-6 pt-2 max-w-md">
           <a className="flex flex-1 flex-col items-center justify-end gap-1 text-slate-400 dark:text-slate-500 transition-colors hover:text-primary" href="#">
             <span className="material-symbols-outlined text-[24px]">grid_view</span>
-            <p className="text-[10px] font-medium leading-normal tracking-[0.015em]">Dashboard</p>
+            <p className="text-[10px] font-medium leading-normal tracking-[0.015em]">Início</p>
           </a>
           <a className="flex flex-1 flex-col items-center justify-end gap-1 text-slate-400 dark:text-slate-500 transition-colors hover:text-primary" href="#">
             <span className="material-symbols-outlined text-[24px]">medication</span>
-            <p className="text-[10px] font-medium leading-normal tracking-[0.015em]">Cabinet</p>
+            <p className="text-[10px] font-medium leading-normal tracking-[0.015em]">Medicamentos</p>
           </a>
           <a className="flex flex-1 flex-col items-center justify-end gap-1 text-primary" href="#">
             <div className="relative">
@@ -171,7 +171,7 @@ export default function HistoryScreen() {
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
               </span>
             </div>
-            <p className="text-[10px] font-medium leading-normal tracking-[0.015em]">History</p>
+            <p className="text-[10px] font-medium leading-normal tracking-[0.015em]">Histórico</p>
           </a>
         </nav>
       </div>
