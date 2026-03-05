@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #2beeba;
+  --color-primary-dark: #1eb890;
+  --color-primary-content: #0d1b18;
+  --color-background-light: #f6f8f7;
+  --color-background-dark: #10221d;
+  --color-surface-light: #FFFCF9;
+  --color-surface-dark: #1A2C26;
+  --color-alert-rose: #E89D9D;
+  --color-alert-rose-light: #FFF0F0;
+  --color-text-main: #4A5D58;
+  --color-text-muted: #7C9A92;
+  --color-gentle-sage: #7C9A92;
+  --color-gentle-rose: #E89D9D;
+  --color-gentle-lavender: #B8B8D1;
+  --color-soft-rose: #FFF0F0;
+  --color-text-rose: #C04D4D;
+  --color-lavender: #E8E8F5;
+  --color-lavender-light: #F2F4F8;
+  --color-text-lavender: #5A5A75;
+  --color-rose: #E89D9D;
+  --color-rose-light: #FFF0F0;
+  --color-rose-soft: #E89D9D;
+  --color-mint-soft: #E8F1EE;
+  --color-cream: #FFFCF9;
+
+  --font-display: var(--font-spline-sans), sans-serif;
+  --font-body: var(--font-spline-sans), sans-serif;
+
+  --radius-lg: 1.5rem;
+  --radius-xl: 2rem;
+  --radius-2xl: 2.5rem;
+  --radius-full: 9999px;
+
+  --shadow-soft: 0 8px 24px -6px rgba(43, 238, 186, 0.15);
+  --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+  --shadow-inner-soft: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+  --shadow-glow: 0 0 20px rgba(43, 238, 186, 0.3);
+  --shadow-card: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+}
+
+.glass-overlay {
+  background: rgba(246, 248, 247, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.dark .glass-overlay {
+  background: rgba(16, 34, 29, 0.7);
+}
+
+/* Custom range slider styling for a softer feel */
+input[type=range] {
+  -webkit-appearance: none;
+  background: transparent;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+}
+input[type=range]:focus {
+  outline: none;
+}
+
+/* Hide scrollbar */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Custom focus ring */
+.input-soft:focus {
+  background-color: white;
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(43, 238, 186, 0.25);
+  border-color: #2beeba;
+}
+
+@keyframes gentle-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(0.98); }
+}
+.animate-gentle-pulse {
+  animation: gentle-pulse 3s ease-in-out infinite;
+}
+
+body {
+  min-height: max(884px, 100dvh);
+}

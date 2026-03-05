@@ -1,0 +1,109 @@
+import React from 'react';
+
+export default function SafetyCheckScreen() {
+  return (
+    <div className="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased selection:bg-primary selection:text-primary-content min-h-screen">
+      {/* Mock Background Content (Dashboard View to be blurred) */}
+      <div aria-hidden="true" className="fixed inset-0 z-0 overflow-hidden pointer-events-none opacity-50">
+        {/* Header */}
+        <div className="p-6 pb-2">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-200">Good Morning, Sarah</h1>
+              <p className="text-slate-500 text-sm font-medium tracking-wide">WED, OCT 24</p>
+            </div>
+            <div className="h-12 w-12 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
+              <img alt="User profile avatar" className="h-full w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCiLR7lsGB3jXY2I4_W5FG3oao3m7ugSAowYWI-GRZrXkjyZ7_I3n_Im-JmHadXWV1xfCfBs-lTE_yidez2jXU2nGv2s0FWHE1HnhRjw8VsdUbi6bvjdaOftLcwbUWISuFUqUyEawwNUIXpfPSqaPLZiAERy7QOwJbWaCs8QFAucZHu4RKFAQ8Axv2g0KVVSDZROyoCBzNh1pbrer82v8DYL5IkP-C2q_yIsBdxkvjjG7-EoOLqv3iNwqjaw7o4yuwx0kmoBetNEfY" />
+            </div>
+          </div>
+          {/* Family Scroll */}
+          <div className="flex gap-4 mb-8">
+            <div className="flex flex-col items-center gap-2">
+              <div className="h-16 w-16 rounded-full ring-4 ring-primary p-1">
+                <img alt="Child profile Leo" className="h-full w-full rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzU7rKDBOC7MLNMqteS5G2zJGs86CqhGOexqNz_0S5jNQ-S7HpI2pG8mVYf6Qgc3gly0C02uOrlytQxJaJ5U90e67sw1ZRwiXlzDzo7oke6Eos7xdC6PS0vK7vPFYbf7eUQEuMftanKjIDSzeQnbqrzXip4bGgZrOfK2QWxwFv5WN-LzvR6gFFr5oouB_33h6LbCW-9jkqIxqbcSdYzeRdNWr1qN9P2ImaSO9M-DhwYXE3BYMI3AT9GAMnEedpaV67pYM3AWq1d5k" />
+              </div>
+              <span className="text-xs font-bold text-slate-700 dark:text-slate-300">Leo</span>
+            </div>
+            <div className="flex flex-col items-center gap-2 opacity-50">
+              <div className="h-16 w-16 rounded-full bg-slate-200 dark:bg-slate-700"></div>
+            </div>
+          </div>
+        </div>
+        {/* Cards */}
+        <div className="px-6 space-y-4">
+          <div className="bg-white dark:bg-surface-dark p-4 rounded-xl shadow-sm border-l-4 border-slate-300">
+            <div className="h-4 w-1/3 bg-slate-200 dark:bg-slate-700 rounded mb-2"></div>
+            <div className="h-8 w-2/3 bg-slate-200 dark:bg-slate-700 rounded"></div>
+          </div>
+          <div className="bg-white dark:bg-surface-dark p-4 rounded-xl shadow-sm">
+            <div className="h-20 w-full bg-slate-100 dark:bg-slate-800 rounded"></div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Safety Check Overlay */}
+      <main className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 sm:p-6 glass-overlay transition-opacity duration-300">
+        {/* Modal Card */}
+        <div className="w-full max-w-md bg-surface-light dark:bg-surface-dark rounded-[2.5rem] shadow-glass overflow-hidden transform transition-all scale-100 flex flex-col relative">
+          {/* Close button (optional interaction hint) */}
+          <button className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5">
+            <span className="material-symbols-outlined text-2xl">close</span>
+          </button>
+
+          {/* Card Content */}
+          <div className="p-8 flex flex-col items-center text-center">
+            {/* Icon: Soft Rose Shield */}
+            <div className="mb-6 relative">
+              <div className="absolute inset-0 bg-alert-rose opacity-20 blur-xl rounded-full transform scale-150"></div>
+              <div className="relative flex items-center justify-center w-24 h-24 rounded-full bg-alert-rose-light dark:bg-red-900/30">
+                <span className="material-symbols-outlined text-[48px] text-alert-rose" style={{ fontVariationSettings: "'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 48" }}>
+                  health_and_safety
+                </span>
+              </div>
+            </div>
+
+            {/* Text Content */}
+            <div className="space-y-4 mb-8">
+              <h2 className="text-3xl font-bold text-text-main dark:text-slate-100 tracking-tight leading-tight">
+                Just a moment
+              </h2>
+              <div className="bg-white dark:bg-black/20 rounded-xl p-4 text-left border border-slate-100 dark:border-white/5">
+                <p className="text-slate-600 dark:text-slate-300 text-base leading-relaxed">
+                  You logged <strong className="text-slate-900 dark:text-white font-semibold">Ibuprofen</strong> 2 hours ago.
+                </p>
+                <div className="mt-3 flex items-start gap-3">
+                  <span className="material-symbols-outlined text-alert-rose text-lg mt-0.5">info</span>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 leading-snug">
+                    This medication usually requires a <span className="font-semibold text-alert-rose">6-hour gap</span> between doses to be safe.
+                  </p>
+                </div>
+              </div>
+              <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">
+                Are you sure you want to proceed?
+              </p>
+            </div>
+
+            {/* Actions */}
+            <div className="w-full space-y-3">
+              {/* Primary Action (Safe Choice) */}
+              <button className="group relative flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-full h-14 px-8 bg-primary text-primary-content text-base font-bold leading-normal tracking-wide shadow-soft hover:shadow-lg transition-all active:scale-[0.98]">
+                <span className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                <span className="material-symbols-outlined mr-2">cancel</span>
+                <span>Cancel & Wait</span>
+              </button>
+              {/* Secondary Action (Risky Choice) */}
+              <button className="flex w-full cursor-pointer items-center justify-center rounded-full h-12 px-6 text-slate-400 dark:text-slate-500 text-sm font-semibold hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 transition-colors">
+                <span>Log Anyway</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Bottom decorative line */}
+          <div className="h-1.5 w-full bg-slate-100 dark:bg-slate-800">
+            <div className="h-full w-1/3 bg-alert-rose mx-auto rounded-full opacity-50"></div>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}
