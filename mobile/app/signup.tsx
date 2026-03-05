@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  Image,
   ScrollView,
   ActivityIndicator,
   Alert,
@@ -15,57 +14,45 @@ import {
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { colors, spacing, radii } from "@/lib/theme";
-import { login, getStoredUser } from "@/lib/auth";
+import { register } from "@/lib/auth";
 
-export default function WelcomeScreen() {
+export default function SignupScreen() {
   const router = useRouter();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [checkingAuth, setCheckingAuth] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
 
-  useEffect(() => {
-    getStoredUser().then((user) => {
-      if (user) {
-        router.replace("/(tabs)/dashboard");
-      } else {
-        setCheckingAuth(false);
-      }
-    });
-  }, []);
-
-  const handleLogin = async () => {
+  const handleSignup = async () => {
+    if (!name.trim()) {
+      Alert.alert("Atenção", "Por favor, insira seu nome.");
+      return;
+    }
     if (!email.trim()) {
       Alert.alert("Atenção", "Por favor, insira seu email.");
       return;
     }
-    if (!password) {
-      Alert.alert("Atenção", "Por favor, insira sua senha.");
+    if (password.length < 6) {
+      Alert.alert("Atenção", "A senha deve ter pelo menos 6 caracteres.");
+      return;
+    }
+    if (password !== confirmPassword) {
+      Alert.alert("Atenção", "As senhas não coincidem.");
       return;
     }
 
     setLoading(true);
     try {
-      await login(email.trim(), password);
+      await register(name.trim(), email.trim(), password);
       router.replace("/(tabs)/dashboard");
     } catch (error: any) {
-      Alert.alert(
-        "Erro ao entrar",
-        error.message || "Email ou senha incorretos."
-      );
+      Alert.alert("Erro", error.message || "Não foi possível criar a conta.");
     } finally {
       setLoading(false);
     }
   };
-
-  if (checkingAuth) {
-    return (
-      <View style={[styles.container, styles.loadingContainer]}>
-        <ActivityIndicator size="large" color={colors.primary} />
-      </View>
-    );
-  }
 
   return (
     <KeyboardAvoidingView
@@ -77,29 +64,50 @@ export default function WelcomeScreen() {
         bounces={false}
         keyboardShouldPersistTaps="handled"
       >
-        <View style={styles.illustrationArea}>
+        <View style={styles.headerArea}>
           <View style={styles.blob1} />
           <View style={styles.blob2} />
-          <Image
-            source={{
-              uri: "https://lh3.googleusercontent.com/aida-public/AB6AXuD-gvMLXig3vT7-FfWnqwJddVl-AzTVzew6zDVN6seImiHYpMeja0kVPiAD83aApGad-7TPVmozB2vBhe-JPIdcUMrbiVFaaJJOrjfnsM8YMywnDHjN1gJ0_MiXDrV4U_B3XjaOGRzkDPXvV3goL5u5LgfG3pUnGaMwmahk-jBZnXMKb1iau6VT3aEVw48_EtgLTZdDF_gDx1ImhGsvclkTXcm0BiIOcSpiv_AOqrSvj7X0h7kXuglcI-3dNOJrg2RanNrdiL7duL0",
-            }}
-            style={styles.illustration}
-            resizeMode="contain"
-          />
-        </View>
-
-        <View style={styles.brandSection}>
-          <View style={styles.iconCircle}>
-            <Ionicons name="leaf" size={28} color={colors.primary} />
+          <View style={styles.headerContent}>
+            <TouchableOpacity
+              style={styles.backButton}
+              onPress={() => router.back()}
+            >
+              <Ionicons name="arrow-back" size={24} color={colors.slate800} />
+            </TouchableOpacity>
+            <View style={styles.iconCircle}>
+              <Ionicons name="person-add" size={28} color={colors.primary} />
+            </View>
+            <Text style={styles.title}>Criar Conta</Text>
+            <Text style={styles.subtitle}>
+              Comece a cuidar da saúde da sua família
+            </Text>
           </View>
-          <Text style={styles.title}>Gentle Care</Text>
-          <Text style={styles.subtitle}>Health tracking, simplified.</Text>
         </View>
 
-        <View style={styles.actionsSection}>
+        <View style={styles.formSection}>
           <View style={styles.inputGroup}>
-            <View style={styles.emailRow}>
+            <Text style={styles.label}>Nome completo</Text>
+            <View style={styles.inputRow}>
+              <Ionicons
+                name="person-outline"
+                size={20}
+                color={colors.slate400}
+                style={styles.inputIcon}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Seu nome"
+                placeholderTextColor={colors.slate400}
+                value={name}
+                onChangeText={setName}
+                autoCapitalize="words"
+              />
+            </View>
+          </View>
+
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>Email</Text>
+            <View style={styles.inputRow}>
               <Ionicons
                 name="mail-outline"
                 size={20}
@@ -107,19 +115,20 @@ export default function WelcomeScreen() {
                 style={styles.inputIcon}
               />
               <TextInput
-                style={styles.emailInput}
+                style={styles.input}
                 placeholder="seu@email.com"
                 placeholderTextColor={colors.slate400}
-                keyboardType="email-address"
-                autoCapitalize="none"
                 value={email}
                 onChangeText={setEmail}
+                keyboardType="email-address"
+                autoCapitalize="none"
               />
             </View>
           </View>
 
           <View style={styles.inputGroup}>
-            <View style={styles.emailRow}>
+            <Text style={styles.label}>Senha</Text>
+            <View style={styles.inputRow}>
               <Ionicons
                 name="lock-closed-outline"
                 size={20}
@@ -127,12 +136,12 @@ export default function WelcomeScreen() {
                 style={styles.inputIcon}
               />
               <TextInput
-                style={styles.emailInput}
-                placeholder="Senha"
+                style={styles.input}
+                placeholder="Mínimo 6 caracteres"
                 placeholderTextColor={colors.slate400}
-                secureTextEntry={!showPassword}
                 value={password}
                 onChangeText={setPassword}
+                secureTextEntry={!showPassword}
               />
               <TouchableOpacity
                 onPress={() => setShowPassword(!showPassword)}
@@ -146,18 +155,38 @@ export default function WelcomeScreen() {
             </View>
           </View>
 
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>Confirmar senha</Text>
+            <View style={styles.inputRow}>
+              <Ionicons
+                name="lock-closed-outline"
+                size={20}
+                color={colors.slate400}
+                style={styles.inputIcon}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Repita a senha"
+                placeholderTextColor={colors.slate400}
+                value={confirmPassword}
+                onChangeText={setConfirmPassword}
+                secureTextEntry={!showPassword}
+              />
+            </View>
+          </View>
+
           <TouchableOpacity
-            style={[styles.loginButton, loading && styles.buttonDisabled]}
-            onPress={handleLogin}
+            style={[styles.signupButton, loading && styles.buttonDisabled]}
+            onPress={handleSignup}
             disabled={loading}
           >
             {loading ? (
               <ActivityIndicator color={colors.slate900} />
             ) : (
               <>
-                <Text style={styles.loginText}>Entrar</Text>
+                <Text style={styles.signupButtonText}>Criar Conta</Text>
                 <Ionicons
-                  name="arrow-forward"
+                  name="checkmark-circle"
                   size={20}
                   color={colors.slate900}
                 />
@@ -165,10 +194,10 @@ export default function WelcomeScreen() {
             )}
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => router.push("/signup")}>
-            <Text style={styles.signupText}>
-              Novo aqui?{" "}
-              <Text style={styles.signupLink}>Criar uma conta</Text>
+          <TouchableOpacity onPress={() => router.back()}>
+            <Text style={styles.loginText}>
+              Já tem uma conta?{" "}
+              <Text style={styles.loginLink}>Entrar</Text>
             </Text>
           </TouchableOpacity>
         </View>
@@ -182,50 +211,56 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.backgroundLight,
   },
-  loadingContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
   content: {
     flexGrow: 1,
   },
-  illustrationArea: {
-    height: 260,
+  headerArea: {
+    height: 240,
     backgroundColor: "#e8f5f1",
     borderBottomLeftRadius: 48,
     borderBottomRightRadius: 48,
-    alignItems: "center",
-    justifyContent: "flex-end",
     overflow: "hidden",
     position: "relative",
   },
   blob1: {
     position: "absolute",
-    top: 40,
-    right: 40,
-    width: 200,
-    height: 200,
-    borderRadius: 100,
+    top: 20,
+    right: 30,
+    width: 160,
+    height: 160,
+    borderRadius: 80,
     backgroundColor: "rgba(43, 238, 186, 0.1)",
   },
   blob2: {
     position: "absolute",
-    top: 80,
-    left: -40,
-    width: 150,
-    height: 150,
-    borderRadius: 75,
+    top: 60,
+    left: -30,
+    width: 120,
+    height: 120,
+    borderRadius: 60,
     backgroundColor: "rgba(184, 184, 209, 0.2)",
   },
-  illustration: {
-    width: "80%",
-    height: 220,
-    marginBottom: 16,
-  },
-  brandSection: {
+  headerContent: {
+    flex: 1,
     alignItems: "center",
-    paddingTop: 20,
-    paddingBottom: 12,
+    justifyContent: "center",
+    paddingTop: 40,
+  },
+  backButton: {
+    position: "absolute",
+    top: 50,
+    left: 20,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: colors.white,
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 2,
   },
   iconCircle: {
     width: 48,
@@ -242,42 +277,50 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   title: {
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: "800",
     color: colors.slate900,
     letterSpacing: -0.5,
     marginBottom: 4,
   },
   subtitle: {
-    fontSize: 18,
+    fontSize: 15,
     color: colors.slate500,
     fontWeight: "500",
   },
-  actionsSection: {
+  formSection: {
     paddingHorizontal: spacing.lg,
+    paddingTop: 28,
     paddingBottom: 48,
   },
   inputGroup: {
-    marginBottom: 12,
+    marginBottom: 18,
   },
-  emailRow: {
+  label: {
+    fontSize: 13,
+    fontWeight: "700",
+    color: colors.slate800,
+    marginBottom: 8,
+    letterSpacing: 0.3,
+  },
+  inputRow: {
     flexDirection: "row",
     alignItems: "center",
-    height: 56,
+    height: 52,
     backgroundColor: colors.mintSoft,
     borderRadius: radii.full,
-    paddingHorizontal: 20,
+    paddingHorizontal: 18,
   },
   inputIcon: {
     marginRight: 12,
   },
-  emailInput: {
+  input: {
     flex: 1,
     fontSize: 16,
     fontWeight: "500",
     color: colors.slate900,
   },
-  loginButton: {
+  signupButton: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
@@ -285,7 +328,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     borderRadius: radii.full,
     gap: 8,
-    marginTop: 4,
+    marginTop: 8,
     shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.25,
@@ -295,18 +338,18 @@ const styles = StyleSheet.create({
   buttonDisabled: {
     opacity: 0.7,
   },
-  loginText: {
+  signupButtonText: {
     fontSize: 18,
     fontWeight: "700",
     color: colors.slate900,
   },
-  signupText: {
+  loginText: {
     textAlign: "center",
     color: colors.slate500,
     fontSize: 14,
     marginTop: 20,
   },
-  signupLink: {
+  loginLink: {
     color: colors.primaryDark,
     fontWeight: "700",
   },

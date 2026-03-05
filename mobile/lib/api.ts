@@ -5,11 +5,24 @@ async function apiFetch(path: string, options?: RequestInit) {
     headers: { "Content-Type": "application/json" },
     ...options,
   });
-  if (!res.ok) throw new Error(`API error: ${res.status}`);
-  return res.json();
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || `API error: ${res.status}`);
+  return data;
 }
 
 export const api = {
+  login: (email: string, password: string) =>
+    apiFetch("/api/auth/login", {
+      method: "POST",
+      body: JSON.stringify({ email, password }),
+    }),
+
+  register: (name: string, email: string, password: string) =>
+    apiFetch("/api/auth/register", {
+      method: "POST",
+      body: JSON.stringify({ name, email, password }),
+    }),
+
   getProfiles: () => apiFetch("/api/profiles"),
   getMedications: (profileId?: number) =>
     apiFetch(profileId ? `/api/medications?profileId=${profileId}` : "/api/medications"),

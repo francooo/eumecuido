@@ -5,16 +5,17 @@ A Next.js medication and health tracking app for managing family care, with a Re
 ## Tech Stack
 
 - **Web Framework**: Next.js 16 (App Router) with TypeScript
-- **Mobile Framework**: React Native with Expo (SDK 52) + expo-router
-- **Database**: Neon PostgreSQL (serverless) via `@neondatabase/serverless`
+- **Mobile Framework**: React Native with Expo (SDK 54) + expo-router
+- **Database**: Neon PostgreSQL (serverless) via `@neondatabase/serverless` (WebSocket driver)
 - **ORM**: Drizzle ORM
+- **Auth**: Email/password with bcrypt hashing, AsyncStorage session persistence
 - **Styling**: Tailwind CSS v4 (web), React Native StyleSheet (mobile)
 
 ## Project Structure
 
 ### Web App (root)
 - `src/app/` — Next.js App Router pages
-  - `api/` — REST API routes (profiles, medications, logs, seed)
+  - `api/` — REST API routes (auth, profiles, medications, logs, seed)
   - `dashboard/` — Main dashboard
   - `log-dose/` — Medication dose logging
   - `history/` — Dose history
@@ -28,6 +29,7 @@ A Next.js medication and health tracking app for managing family care, with a Re
 ### Mobile App (`mobile/`)
 - `mobile/app/` — Expo Router screens
   - `(tabs)/` — Tab navigator (dashboard, history, settings)
+  - `signup.tsx` — Account creation screen
   - `log-dose.tsx` — Log dose modal
   - `medicine-cabinet.tsx` — Add medication modal
   - `medication-insight.tsx` — Medication insight modal

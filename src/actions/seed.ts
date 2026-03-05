@@ -12,10 +12,13 @@ export async function seedDatabase() : Promise<void> {
     console.log("Already seeded"); return;
   }
 
-  // Insert User
+  const bcrypt = await import("bcryptjs");
+  const hashedPassword = await bcrypt.hash("123456", 10);
+
   const [user] = await db.insert(users).values({
     name: "Sarah",
     email: "sarah@example.com",
+    password: hashedPassword,
   }).returning();
 
   // Insert Profiles

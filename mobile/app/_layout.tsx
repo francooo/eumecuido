@@ -14,6 +14,10 @@ export default function RootLayout() {
         }}
       >
         <Stack.Screen name="index" />
+        <Stack.Screen
+          name="signup"
+          options={{ animation: "slide_from_right" }}
+        />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen
           name="log-dose"
