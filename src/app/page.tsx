@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
 
 export default function Home() {
-  redirect('/expo-connect');
+  redirect('/dashboard');
 }

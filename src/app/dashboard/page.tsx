@@ -13,9 +13,14 @@ export default function DashboardScreen() {
               <h1 className="text-2xl font-bold tracking-tight text-text-main dark:text-white">Bom Dia, Sarah</h1>
               <p className="text-lavender font-bold text-xs tracking-widest uppercase mt-1">OUT 24 • QUINTA-FEIRA</p>
             </div>
-            <div className="relative group cursor-pointer">
-              <span className="material-symbols-outlined text-text-muted dark:text-primary/70 text-3xl">notifications</span>
-              <span className="absolute top-0 right-0 block h-2.5 w-2.5 rounded-full bg-rose ring-2 ring-white dark:ring-background-dark"></span>
+            <div className="flex items-center gap-3">
+              <a href="/expo-connect" className="relative group cursor-pointer" title="Conectar App Mobile">
+                <span className="material-symbols-outlined text-text-muted dark:text-primary/70 text-3xl">qr_code_2</span>
+              </a>
+              <div className="relative group cursor-pointer">
+                <span className="material-symbols-outlined text-text-muted dark:text-primary/70 text-3xl">notifications</span>
+                <span className="absolute top-0 right-0 block h-2.5 w-2.5 rounded-full bg-rose ring-2 ring-white dark:ring-background-dark"></span>
+              </div>
             </div>
           </div>
         </header>
