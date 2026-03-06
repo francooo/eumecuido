@@ -4,8 +4,6 @@
     "slug": "gentle-care-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "scheme": "gentle-care",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
