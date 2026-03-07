@@ -55,6 +55,7 @@ export default function LogDoseScreen() {
   const params = useLocalSearchParams<{
     id_membro?: string;
     nome_membro?: string;
+    peso_atual?: string;
     id_medicamento?: string;
     id_dose_agendada?: string;
     nome_medicamento?: string;
@@ -65,6 +66,7 @@ export default function LogDoseScreen() {
 
   const idMembro = params.id_membro ? parseInt(params.id_membro, 10) : undefined;
   const nomeMembro = params.nome_membro ?? "—";
+  const pesoAtualParam = params.peso_atual?.trim();
   const idMedicamento = params.id_medicamento ? parseInt(params.id_medicamento, 10) : undefined;
   const idDoseAgendada = params.id_dose_agendada ? parseInt(params.id_dose_agendada, 10) : undefined;
   const initialMedName = (params.nome_medicamento || "").trim().slice(0, MAX_MED_NAME_LENGTH) || "";
@@ -76,9 +78,11 @@ export default function LogDoseScreen() {
   const [amount, setAmount] = useState(initialDosage);
   const [unit, setUnit] = useState(initialUnit);
   const [selectedTime, setSelectedTime] = useState("now");
-  const [weightInput, setWeightInput] = useState("");
-  const [weightVerifiedAt, setWeightVerifiedAt] = useState<string | undefined>();
-  const [weightConfirmed, setWeightConfirmed] = useState<string | null>(null);
+  const [weightInput, setWeightInput] = useState(pesoAtualParam || "");
+  const [weightVerifiedAt, setWeightVerifiedAt] = useState<string | undefined>(
+    pesoAtualParam ? new Date().toISOString() : undefined
+  );
+  const [weightConfirmed, setWeightConfirmed] = useState<string | null>(pesoAtualParam && !Number.isNaN(parseFloat(pesoAtualParam)) ? pesoAtualParam : null);
   const [nextDoseTime, setNextDoseTime] = useState<{ hours: number; minutes: number } | null>(null);
   const [nextDosePickerVisible, setNextDosePickerVisible] = useState(false);
   const [nextDoseHourInput, setNextDoseHourInput] = useState("12");
@@ -89,9 +93,10 @@ export default function LogDoseScreen() {
   const sliderMax = 15;
   const amountNum = parseFloat(amount) || 0;
 
-  // Carregar peso atual do membro
+  // Carregar último peso do membro (getMemberData retorna currentWeight e weightLastLoggedAt)
   useEffect(() => {
     if (!idMembro) return;
+    if (pesoAtualParam) return; // já pré-preenchido por parâmetro de navegação
     let cancelled = false;
     (async () => {
       try {
@@ -109,7 +114,7 @@ export default function LogDoseScreen() {
       }
     })();
     return () => { cancelled = true; };
-  }, [idMembro]);
+  }, [idMembro, pesoAtualParam]);
 
   const handleCloseMedNameEdit = () => {
     const trimmed = medicationName.trim();

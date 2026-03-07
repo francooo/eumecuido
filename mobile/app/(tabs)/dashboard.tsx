@@ -8,6 +8,8 @@ import {
   Image,
   ActivityIndicator,
   Alert,
+  Modal,
+  TextInput,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { useFocusEffect } from "@react-navigation/native";
@@ -28,6 +30,36 @@ function formatScheduledTime(isoString: string | undefined): string {
   return `${pm}:${m.toString().padStart(2, "0")} PM`;
 }
 
+// Formata data relativa para "Último registro" (ex: "2 semanas atrás")
+function formatWeightLastRecord(isoString: string | undefined, weightKg: number | null): string {
+  if (weightKg == null || !isoString) return "";
+  const then = new Date(isoString);
+  const now = new Date();
+  const diffMs = now.getTime() - then.getTime();
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  if (diffDays === 0) return `Último registro: ${Number(weightKg).toFixed(1)}kg (hoje)`;
+  if (diffDays === 1) return `Último registro: ${Number(weightKg).toFixed(1)}kg (1 dia atrás)`;
+  if (diffDays < 7) return `Último registro: ${Number(weightKg).toFixed(1)}kg (${diffDays} dias atrás)`;
+  const weeks = Math.floor(diffDays / 7);
+  if (weeks === 1) return `Último registro: ${Number(weightKg).toFixed(1)}kg (1 semana atrás)`;
+  if (weeks < 5) return `Último registro: ${Number(weightKg).toFixed(1)}kg (${weeks} semanas atrás)`;
+  const months = Math.floor(diffDays / 30);
+  if (months === 1) return `Último registro: ${Number(weightKg).toFixed(1)}kg (1 mês atrás)`;
+  return `Último registro: ${Number(weightKg).toFixed(1)}kg (${months} meses atrás)`;
+}
+
+// Formata data do último preenchimento para exibição no bloco Peso (ex: "07/03/2025 às 14:30")
+function formatWeightUpdatedAt(isoString: string | undefined): string {
+  if (!isoString) return "";
+  const d = new Date(isoString);
+  const day = d.getDate().toString().padStart(2, "0");
+  const month = (d.getMonth() + 1).toString().padStart(2, "0");
+  const year = d.getFullYear();
+  const hours = d.getHours().toString().padStart(2, "0");
+  const minutes = d.getMinutes().toString().padStart(2, "0");
+  return `${day}/${month}/${year} às ${hours}:${minutes}`;
+}
+
 export default function DashboardScreen() {
   const router = useRouter();
   const { user, loading } = useAuth();
@@ -40,7 +72,7 @@ export default function DashboardScreen() {
   }>>([]);
   const [selectedMemberId, setSelectedMemberId] = useState<number | null>(null);
   const [memberData, setMemberData] = useState<{
-    member: { id: number; name: string; currentWeight: number | null; weightVariation: number | null };
+    member: { id: number; name: string; currentWeight: number | null; weightVariation: number | null; weightLastLoggedAt?: string | null; updatedAt?: string | null };
     todayDoses: Array<{ id?: number; medicationId?: number | null; name: string; dosage: string; unit: string; scheduledTime: string }>;
     nextDoses: Array<{ id?: number; medicationId?: number | null; name: string; dosage: string; unit: string; scheduledTime: string }>;
     yesterdayDoses: Array<unknown>;
@@ -48,6 +80,9 @@ export default function DashboardScreen() {
   const [memberDataLoading, setMemberDataLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [memberToDeleteId, setMemberToDeleteId] = useState<number | null>(null);
+  const [connectionError, setConnectionError] = useState<string | null>(null);
+  const [weightModalVisible, setWeightModalVisible] = useState(false);
+  const [weightModalInput, setWeightModalInput] = useState("");
   const lastTapRef = useRef<{ id: number; time: number } | null>(null);
 
   const selectedMemberName = familyMembers.find(m => m.id === selectedMemberId)?.name ?? memberData?.member?.name ?? "";
@@ -94,6 +129,7 @@ export default function DashboardScreen() {
 
   async function loadFamilyMembers() {
     if (!user) return;
+    setConnectionError(null);
     try {
       const response = await api.getFamilyMembers(user.id.toString());
       if (response.members && response.members.length > 0) {
@@ -110,8 +146,13 @@ export default function DashboardScreen() {
         setFamilyMembers([]);
         setSelectedMemberId(null);
       }
-    } catch (error) {
-      console.error("Error loading family members:", error);
+    } catch (error: any) {
+      const msg = error?.message || "";
+      if (msg.includes("conexão") || msg.includes("Network") || msg.includes("servidor")) {
+        setConnectionError(msg);
+        setFamilyMembers([]);
+        setSelectedMemberId(null);
+      }
     }
   }
 
@@ -186,6 +227,39 @@ export default function DashboardScreen() {
     router.push("/add-family-member");
   };
 
+  const openWeightModal = () => {
+    if (selectedMemberId == null) return;
+    const w = memberData?.member?.currentWeight;
+    setWeightModalInput(w != null ? String(w) : "");
+    setWeightModalVisible(true);
+  };
+
+  const adjustWeightModal = (delta: number) => {
+    const current = parseFloat(weightModalInput) || 0;
+    setWeightModalInput(Math.max(0, current + delta).toFixed(1));
+  };
+
+  const handleSaveWeightModal = async () => {
+    const raw = weightModalInput.replace(",", ".");
+    const value = parseFloat(raw);
+    if (Number.isNaN(value) || value <= 0 || value > 650) {
+      Alert.alert("Atenção", "Informe um peso válido (0 a 650 kg).");
+      return;
+    }
+    if (selectedMemberId == null || !user) return;
+    try {
+      await api.createWeightRecord({
+        memberId: selectedMemberId,
+        weightKg: value.toFixed(1),
+        recordedBy: user.id,
+      });
+      setWeightModalVisible(false);
+      await loadMemberData(selectedMemberId);
+    } catch (e: any) {
+      Alert.alert("Erro", e?.message ?? "Não foi possível salvar o peso.");
+    }
+  };
+
   const firstTodayDose = memberData?.todayDoses?.[0];
   const firstNextDose = memberData?.nextDoses?.[0];
   const hasYesterdayDoses = (memberData?.yesterdayDoses?.length ?? 0) > 0;
@@ -225,6 +299,19 @@ export default function DashboardScreen() {
           <View style={styles.notifDot} />
         </TouchableOpacity>
       </View>
+
+      {connectionError ? (
+        <View style={styles.connectionErrorCard}>
+          <Ionicons name="cloud-offline-outline" size={32} color={colors.textMuted} />
+          <Text style={styles.connectionErrorTitle}>Sem conexão com o servidor</Text>
+          <Text style={styles.connectionErrorText}>
+            Verifique: (1) Backend rodando no PC com npm run dev. (2) Celular na mesma rede Wi‑Fi do PC. (3) Firewall do Windows liberando a porta 5000.
+          </Text>
+          <TouchableOpacity style={styles.connectionErrorButton} onPress={() => loadFamilyMembers()}>
+            <Text style={styles.connectionErrorButtonText}>Tentar novamente</Text>
+          </TouchableOpacity>
+        </View>
+      ) : null}
 
       <ScrollView
         horizontal
@@ -350,7 +437,7 @@ export default function DashboardScreen() {
         <View style={styles.widgetRow}>
           <TouchableOpacity
             style={styles.widget}
-            onPress={() => router.push("/weight-check")}
+            onPress={selectedMemberId != null ? openWeightModal : undefined}
             activeOpacity={0.8}
           >
             <View style={styles.widgetHeader}>
@@ -374,9 +461,11 @@ export default function DashboardScreen() {
             <Text style={styles.widgetFooter}>
               {memberData?.member?.currentWeight == null
                 ? "Peso não informado"
-                : memberData?.member?.weightVariation != null
-                  ? `${memberData.member.weightVariation >= 0 ? "+" : ""}${memberData.member.weightVariation.toFixed(1)}kg desde a última verificação`
-                  : "Último peso registrado"}
+                : memberData?.member?.updatedAt
+                  ? formatWeightUpdatedAt(memberData.member.updatedAt)
+                  : memberData?.member?.weightLastLoggedAt
+                    ? formatWeightUpdatedAt(memberData.member.weightLastLoggedAt)
+                    : "Último peso registrado"}
             </Text>
           </TouchableOpacity>
 
@@ -438,6 +527,71 @@ export default function DashboardScreen() {
           </>
         )}
       </ScrollView>
+
+      <Modal
+        visible={weightModalVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setWeightModalVisible(false)}
+      >
+        <View style={styles.weightModalOverlay}>
+          <View style={styles.weightModalCard}>
+            <View style={styles.weightModalCloseRow}>
+              <TouchableOpacity onPress={() => setWeightModalVisible(false)} style={styles.weightModalCloseBtn}>
+                <Ionicons name="close" size={24} color={colors.textMuted} />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.weightModalHeaderSection}>
+              <Text style={styles.weightModalTitle}>Vamos ser precisos</Text>
+              <Text style={styles.weightModalSubtitle}>
+                Qual é o peso atual de {selectedMemberName || "este membro"}?
+              </Text>
+            </View>
+            <View style={styles.weightModalWeightSection}>
+              <View style={styles.weightModalWeightRow}>
+                <TouchableOpacity style={styles.weightModalStepperBtn} onPress={() => adjustWeightModal(-0.1)}>
+                  <Ionicons name="remove" size={22} color={colors.textMuted} />
+                </TouchableOpacity>
+                <View style={styles.weightModalInputWrapper}>
+                  <TextInput
+                    style={styles.weightModalInput}
+                    value={weightModalInput}
+                    onChangeText={setWeightModalInput}
+                    keyboardType="decimal-pad"
+                    textAlign="center"
+                    placeholder="0"
+                    placeholderTextColor={colors.textMuted}
+                  />
+                  <Text style={styles.weightModalUnit}>kg</Text>
+                </View>
+                <TouchableOpacity style={styles.weightModalStepperBtn} onPress={() => adjustWeightModal(0.1)}>
+                  <Ionicons name="add" size={22} color={colors.textMuted} />
+                </TouchableOpacity>
+              </View>
+              {memberData?.member?.currentWeight != null && memberData?.member?.weightLastLoggedAt && (
+                <View style={styles.weightModalLastLogged}>
+                  <Ionicons name="time-outline" size={14} color={colors.primary} />
+                  <Text style={styles.weightModalLastLoggedText}>
+                    {formatWeightLastRecord(
+                      memberData.member.weightLastLoggedAt,
+                      memberData.member.currentWeight
+                    )}
+                  </Text>
+                </View>
+              )}
+            </View>
+            <View style={styles.weightModalDisclaimer}>
+              <Ionicons name="information-circle" size={18} color="#ef4444" />
+              <Text style={styles.weightModalDisclaimerText}>
+                Segurança em primeiro lugar: A dosagem será calculada com base neste valor. Verifique se está atualizado.
+              </Text>
+            </View>
+            <TouchableOpacity style={styles.weightModalCalcButton} onPress={handleSaveWeightModal}>
+              <Text style={styles.weightModalCalcButtonText}>Salvar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
 
       <TouchableOpacity
         style={styles.fab}
@@ -513,6 +667,27 @@ const styles = StyleSheet.create({
     borderRadius: radii.full,
   },
   deleteBarConfirmText: { fontSize: 14, fontWeight: "700", color: "#fff" },
+  connectionErrorCard: {
+    marginHorizontal: spacing.lg,
+    marginBottom: spacing.md,
+    padding: spacing.lg,
+    backgroundColor: colors.softRose,
+    borderRadius: radii.lg,
+    borderWidth: 1,
+    borderColor: colors.alertRoseLight,
+    alignItems: "center",
+    gap: 10,
+  },
+  connectionErrorTitle: { fontSize: 16, fontWeight: "700", color: colors.textMain },
+  connectionErrorText: { fontSize: 13, color: colors.textMuted, textAlign: "center", lineHeight: 20 },
+  connectionErrorButton: {
+    backgroundColor: colors.primary,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: radii.full,
+    marginTop: 4,
+  },
+  connectionErrorButtonText: { fontSize: 14, fontWeight: "600", color: colors.primaryContent },
   avatarRing: {
     width: 72,
     height: 72,
@@ -734,4 +909,94 @@ const styles = StyleSheet.create({
     shadowRadius: 12,
     elevation: 6,
   },
+  weightModalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(246, 248, 247, 0.95)",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: spacing.lg,
+  },
+  weightModalCard: {
+    width: "100%",
+    maxWidth: 400,
+    backgroundColor: colors.surfaceLight,
+    borderRadius: radii.xl,
+    padding: spacing.lg,
+    gap: 32,
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.1,
+    shadowRadius: 24,
+    elevation: 6,
+  },
+  weightModalCloseRow: { alignItems: "flex-end" },
+  weightModalCloseBtn: { padding: 8, borderRadius: 20 },
+  weightModalHeaderSection: { alignItems: "center", gap: 8 },
+  weightModalTitle: { fontSize: 28, fontWeight: "700", color: colors.textMain },
+  weightModalSubtitle: { fontSize: 18, fontWeight: "500", color: colors.textMuted },
+  weightModalWeightSection: { alignItems: "center", gap: 24 },
+  weightModalWeightRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 16,
+    width: "100%",
+  },
+  weightModalStepperBtn: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: colors.backgroundLight,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  weightModalInputWrapper: { flexDirection: "row", alignItems: "baseline" },
+  weightModalInput: {
+    fontSize: 56,
+    fontWeight: "700",
+    color: colors.textMain,
+    minWidth: 140,
+  },
+  weightModalUnit: { fontSize: 22, fontWeight: "600", color: colors.textMuted, marginLeft: 4 },
+  weightModalLastLogged: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    backgroundColor: "rgba(43, 238, 186, 0.08)",
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: radii.sm,
+  },
+  weightModalLastLoggedText: { fontSize: 14, fontWeight: "500", color: colors.textMuted },
+  weightModalDisclaimer: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 12,
+    backgroundColor: "rgba(239, 68, 68, 0.05)",
+    padding: 16,
+    borderRadius: radii.sm,
+    borderWidth: 1,
+    borderColor: "rgba(239, 68, 68, 0.1)",
+  },
+  weightModalDisclaimerText: {
+    flex: 1,
+    fontSize: 14,
+    color: "#991b1b",
+    lineHeight: 20,
+  },
+  weightModalCalcButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    height: 56,
+    backgroundColor: colors.primary,
+    borderRadius: radii.full,
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.25,
+    shadowRadius: 16,
+    elevation: 5,
+  },
+  weightModalCalcButtonText: { fontSize: 18, fontWeight: "700", color: colors.primaryContent },
 });

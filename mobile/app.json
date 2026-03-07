@@ -7,6 +7,9 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "scheme": "gentlecare",
+    "updates": {
+      "enabled": false
+    },
     "splash": {
       "backgroundColor": "#f6f8f7",
       "resizeMode": "contain"

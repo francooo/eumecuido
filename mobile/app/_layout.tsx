@@ -35,10 +35,6 @@ export default function RootLayout() {
           name="safety-check"
           options={{ presentation: "modal", animation: "slide_from_bottom" }}
         />
-        <Stack.Screen
-          name="weight-check"
-          options={{ presentation: "modal", animation: "slide_from_bottom" }}
-        />
       </Stack>
     </>
   );

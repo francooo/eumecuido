@@ -42,12 +42,14 @@ export async function POST(request: Request) {
       })
       .returning();
 
-    // Atualizar peso atual do membro
+    // Atualizar peso atual do membro (current_weight_kg, weight_last_logged_at e updated_at)
+    const now = new Date();
     await db
       .update(familyMembers)
       .set({
         currentWeightKg: weightKg,
-        weightLastLoggedAt: new Date(),
+        weightLastLoggedAt: now,
+        updatedAt: now,
       })
       .where(eq(familyMembers.id, parseInt(memberId)));
 
