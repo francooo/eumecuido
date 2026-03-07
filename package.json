@@ -7,10 +7,10 @@
     "build": "next build",
     "start": "next start -p 5000 -H 0.0.0.0",
     "lint": "eslint",
-    "db:push": "drizzle-kit push --force --accept-data-loss"
+    "db:push": "drizzle-kit push --force"
   },
   "dependencies": {
-    "@neondatabase/serverless": "^0.9.5",
+    "@neondatabase/serverless": "^1.0.2",
     "@types/bcryptjs": "^2.4.6",
     "@types/qrcode": "^1.5.6",
     "bcryptjs": "^3.0.3",
