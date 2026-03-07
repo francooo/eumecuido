@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import QRCode from "qrcode";
 
-const EXPO_URL = "exp://uck7kx0-anonymous-8080.exp.direct";
+const EXPO_URL = "exp://nhbiifc-anonymous-8080.exp.direct";
 
 export default function ExpoConnectPage() {
   const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
