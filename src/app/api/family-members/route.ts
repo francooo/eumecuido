@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { familyMembers, familyMemberAudit, profiles, weightRecords } from "@/db/schema";
+import { familyMembers, familyMemberAudit, weightRecords } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
@@ -16,26 +16,7 @@ export async function GET(request: Request) {
       );
     }
 
-    console.log(`Buscando membros para userId: ${userId}`);
-
-    // Primeiro, busca os perfis deste usuário
-    const userProfiles = await db
-      .select()
-      .from(profiles)
-      .where(eq(profiles.userId, parseInt(userId)));
-
-    console.log(`Perfis encontrados: ${userProfiles.length}`);
-
-    if (!userProfiles || userProfiles.length === 0) {
-      console.log('Nenhum perfil encontrado, retornando lista vazia');
-      return NextResponse.json({ members: [] });
-    }
-
-    // Pega o primeiro perfil do usuário (família principal)
-    const profileId = userProfiles[0].id;
-    console.log(`Profile ID: ${profileId}`);
-
-    // Busca membros CRIADOS por este usuário OU vinculados ao perfil dele
+    // Busca membros CRIADOS por este usuário (não exige perfil)
     const members = await db
       .select()
       .from(familyMembers)
@@ -47,8 +28,6 @@ export async function GET(request: Request) {
       )
       .orderBy(familyMembers.createdAt);
 
-    console.log(`Membros encontrados: ${members.length}`);
-
     return NextResponse.json({ members });
   } catch (error: any) {
     console.error("Error fetching family members:", error.message);
@@ -59,6 +38,60 @@ export async function GET(request: Request) {
     );
   }
 }
+
+// DELETE - Excluir (desativar) membro da família
+export async function DELETE(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const memberId = searchParams.get("memberId");
+    const userId = searchParams.get("userId");
+
+    if (!memberId || !userId) {
+      return NextResponse.json(
+        { error: "memberId e userId são obrigatórios" },
+        { status: 400 }
+      );
+    }
+
+    const id = parseInt(memberId, 10);
+    const uid = parseInt(userId, 10);
+    if (Number.isNaN(id) || Number.isNaN(uid)) {
+      return NextResponse.json({ error: "IDs inválidos" }, { status: 400 });
+    }
+
+    const [member] = await db
+      .select()
+      .from(familyMembers)
+      .where(
+        and(
+          eq(familyMembers.id, id),
+          eq(familyMembers.createdByUserId, uid),
+          eq(familyMembers.isActive, true)
+        )
+      );
+
+    if (!member) {
+      return NextResponse.json(
+        { error: "Membro não encontrado ou sem permissão" },
+        { status: 404 }
+      );
+    }
+
+    await db
+      .update(familyMembers)
+      .set({ isActive: false, updatedAt: new Date() })
+      .where(eq(familyMembers.id, id));
+
+    return NextResponse.json({ success: true });
+  } catch (error: any) {
+    console.error("Error deleting family member:", error);
+    return NextResponse.json(
+      { error: "Erro ao excluir membro" },
+      { status: 500 }
+    );
+  }
+}
+
 
 // POST - Criar novo membro VINCULADO AO USUÁRIO AUTENTICADO (com peso - MELHORIA 2)
 export async function POST(request: Request) {

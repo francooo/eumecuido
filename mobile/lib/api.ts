@@ -58,6 +58,11 @@ export const api = {
   getFamilyMembers: (userId: string) =>
     apiFetch(`/api/family-members?userId=${userId}`),
 
+  deleteFamilyMember: (memberId: string, userId: string) =>
+    apiFetch(`/api/family-members?memberId=${memberId}&userId=${userId}`, {
+      method: "DELETE",
+    }),
+
   createFamilyMember: (data: {
     createdByUserId: number;
     name: string;
@@ -93,6 +98,8 @@ export const api = {
     appliedUnit: string;
     appliedAt: string;
     timeOption: string; // 'now', '15m_ago', '30m_ago'
+    weightKgAtMoment?: string | number | null;
+    nextDoseScheduledAt?: string | null; // ISO datetime
     recordedBy?: number;
   }) => apiFetch("/api/dose-records", {
     method: "POST",

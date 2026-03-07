@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -7,79 +7,88 @@ import {
   ScrollView,
   Image,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import { useRouter } from "expo-router";
+import { useFocusEffect } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors, spacing, radii } from "@/lib/theme";
 import { useAuth } from "@/hooks/useAuth";
 import { api } from "@/lib/api";
 
-const profiles = [
-  {
-    name: "Leo",
-    active: true,
-    avatar:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuB900wM7OC9J0Ps93Sq6a3Sd9bHXVmE3jkz01hEaxD3gUfWfsLHPZp3Ny3EAkDD4FRN0h2Quh0MrU4gqv-zKwl-ZmLmgdmhWLM6wE9mePEwOWQztzFkc1MGKSITwPsVXdexLG00gS6zh9TiaTOQiX-m26EXJw7VAxrBJplEBzO0Bbtmv2caPf1gVw-pt2W-4hkM1t7p1R2QeaGNUwWsVSD-rjOn8bdgViKQ262hFgU5RhEmQoIziSYz1MN_yz0NH0gH7pmHm21gLe8",
-    id: 1,
-  },
-  {
-    name: "Dad",
-    active: false,
-    avatar:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuDR_Wq-UMVzFIU5p0zE65G3Rciq4GNtPnN5RcQdYJ6gDZnFtNbjcvZ8pCDdsx7IjdYXs6ihBZp61pkfA7gBDdjlF1d0kwxIs9wWSczJDqolFUadeSxkA4MaA3ZdvPbStd8bLRee-3R3IhplsGOdul5afJqrdDWL_fYECCUWL3D7v8047Uvqz23y_5MqCeie90EgVCp3hDs1yxZhY26v2rmBdpCKL1IVlbnY5qiqQwLnzvAVh7XOwHusac8Vzo3PqTldu1QfdrYFEZA",
-    id: 2,
-  },
-  {
-    name: "Mom",
-    active: false,
-    avatar:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuAcKNA23u0sDrd-3sJ0asySVT72JSNw7f3YNh6cb8oi_uy0br9-WJOP5jqzaSci8cImuggDpD3rSm5NlpSN7o6UoHEo4_xEC22XM_6AW39hqZrftSuPpuOshJkwNtPa-7_JGyb8t96NAdMGDbyeyNqODdSlYzdpzUbyo1PGnvf4prJxBEawDGxfvIu61rGpaVS37JtAzT0ZkbTQ9ziQFv9qJ-wSg2LDZyyf8a1xR4sNOFi1NkGZBO0Te2Kkr228KLaC0ar90ScSCqI",
-    id: 3,
-  },
-];
+// Formata horário para exibição (ex: "Às 9:00" ou "2:00 PM")
+function formatScheduledTime(isoString: string | undefined): string {
+  if (!isoString) return "";
+  const d = new Date(isoString);
+  const h = d.getHours();
+  const m = d.getMinutes();
+  if (h < 12) return `Às ${h}:${m.toString().padStart(2, "0")}`;
+  const pm = h === 12 ? 12 : h - 12;
+  return `${pm}:${m.toString().padStart(2, "0")} PM`;
+}
 
 export default function DashboardScreen() {
   const router = useRouter();
   const { user, loading } = useAuth();
-  const [familyMembers, setFamilyMembers] = useState(profiles);
-  const [selectedMemberId, setSelectedMemberId] = useState<number | null>(null); // MELHORIA 1
-  const [memberData, setMemberData] = useState<any>(null); // MELHORIA 1
-  const [refreshing, setRefreshing] = useState(false); // MELHORIA 1
+  const [familyMembers, setFamilyMembers] = useState<Array<{
+    id: number;
+    name: string;
+    active: boolean;
+    avatar: string;
+    weight?: string;
+  }>>([]);
+  const [selectedMemberId, setSelectedMemberId] = useState<number | null>(null);
+  const [memberData, setMemberData] = useState<{
+    member: { id: number; name: string; currentWeight: number | null; weightVariation: number | null };
+    todayDoses: Array<{ id?: number; medicationId?: number | null; name: string; dosage: string; unit: string; scheduledTime: string }>;
+    nextDoses: Array<{ id?: number; medicationId?: number | null; name: string; dosage: string; unit: string; scheduledTime: string }>;
+    yesterdayDoses: Array<unknown>;
+  } | null>(null);
+  const [memberDataLoading, setMemberDataLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [memberToDeleteId, setMemberToDeleteId] = useState<number | null>(null);
+  const lastTapRef = useRef<{ id: number; time: number } | null>(null);
 
-  // Extrair primeiro nome
-  const firstName = user?.name?.split(' ')[0] || 'Usuário';
+  const selectedMemberName = familyMembers.find(m => m.id === selectedMemberId)?.name ?? memberData?.member?.name ?? "";
 
-  // Data dinâmica usando API nativa do JavaScript
+  const firstName = user?.name?.split(" ")[0] || "Usuário";
+
   const hoje = new Date();
-  const meses = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
-  const diasSemana = ['DOMINGO', 'SEGUNDA-FEIRA', 'TERÇA-FEIRA', 'QUARTA-FEIRA', 'QUINTA-FEIRA', 'SEXTA-FEIRA', 'SÁBADO'];
-  
+  const meses = ["JAN", "FEV", "MAR", "ABR", "MAI", "JUN", "JUL", "AGO", "SET", "OUT", "NOV", "DEZ"];
+  const diasSemana = ["DOMINGO", "SEGUNDA-FEIRA", "TERÇA-FEIRA", "QUARTA-FEIRA", "QUINTA-FEIRA", "SEXTA-FEIRA", "SÁBADO"];
   const mes = meses[hoje.getMonth()];
   const dia = hoje.getDate();
   const diaSemana = diasSemana[hoje.getDay()];
   const dataFormatada = `${mes} ${dia} • ${diaSemana}`;
 
-  // Registrar evento de carregamento
   useEffect(() => {
     if (user) {
       api.logEvent({
-        eventType: 'home_date_rendered',
-        eventData: { date_shown: dataFormatada, locale: 'pt-BR' },
+        eventType: "home_date_rendered",
+        eventData: { date_shown: dataFormatada, locale: "pt-BR" },
         deviceTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      }).catch(console.error);
+      }).catch(() => { /* evento opcional; falha silenciosa */ });
     }
   }, [user, dataFormatada]);
 
-  // Carregar membros da família
   useEffect(() => {
     loadFamilyMembers();
   }, [user]);
 
-  // Carregar dados do membro selecionado (MELHORIA 1)
+  useFocusEffect(
+    React.useCallback(() => {
+      if (user) loadFamilyMembers();
+    }, [user])
+  );
+
   useEffect(() => {
-    if (selectedMemberId) {
-      loadMemberData(selectedMemberId);
+    if (selectedMemberId != null) {
+      setMemberData(null);
+      setMemberDataLoading(true);
+      loadMemberData(selectedMemberId).finally(() => setMemberDataLoading(false));
+    } else {
+      setMemberData(null);
     }
   }, [selectedMemberId]);
 
@@ -88,51 +97,86 @@ export default function DashboardScreen() {
     try {
       const response = await api.getFamilyMembers(user.id.toString());
       if (response.members && response.members.length > 0) {
-        const membersWithState = response.members.map((m: any, index: number) => ({
+        const membersWithState = response.members.map((m: { id: number; name: string; photoUrl?: string; currentWeightKg?: string }, index: number) => ({
           name: m.name,
-          active: index === 0, // Primeiro membro ativo por padrão
-          avatar: m.photoUrl || 'https://via.placeholder.com/60',
+          active: index === 0,
+          avatar: m.photoUrl || "https://via.placeholder.com/60",
           id: m.id,
           weight: m.currentWeightKg,
         }));
         setFamilyMembers(membersWithState);
-        
-        // Selecionar automaticamente o primeiro membro (MELHORIA 1)
-        if (!selectedMemberId) {
-          setSelectedMemberId(membersWithState[0].id);
-        }
+        setSelectedMemberId((prev) => (prev != null ? prev : membersWithState[0].id));
+      } else {
+        setFamilyMembers([]);
+        setSelectedMemberId(null);
       }
     } catch (error) {
-      console.error('Error loading family members:', error);
+      console.error("Error loading family members:", error);
     }
   }
 
-  // Carregar dados completos do membro (MELHORIA 1)
   async function loadMemberData(memberId: number) {
     try {
       const response = await api.getMemberData(memberId.toString());
       setMemberData(response);
-    } catch (error) {
-      console.error('Error loading member data:', error);
+    } catch {
       setMemberData(null);
     }
   }
 
-  // Handler para selecionar membro (MELHORIA 1)
   const handleSelectMember = (memberId: number) => {
     setSelectedMemberId(memberId);
-    // Atualizar estado de ativo/inativo
-    setFamilyMembers(prev => prev.map(m => ({
-      ...m,
-      active: m.id === memberId,
-    })));
+    setFamilyMembers((prev) =>
+      prev.map((m) => ({ ...m, active: m.id === memberId }))
+    );
   };
 
-  // Refresh (MELHORIA 1)
+  const handleAvatarPress = (p: { id: number; name: string }) => {
+    const now = Date.now();
+    const last = lastTapRef.current;
+    if (last && last.id === p.id && now - last.time < 400) {
+      lastTapRef.current = null;
+      setMemberToDeleteId(p.id);
+      return;
+    }
+    lastTapRef.current = { id: p.id, time: now };
+    handleSelectMember(p.id);
+  };
+
+  const handleConfirmDeleteMember = () => {
+    const id = memberToDeleteId;
+    const name = familyMembers.find((m) => m.id === id)?.name;
+    if (!id || !user) return;
+    Alert.alert(
+      "Excluir membro",
+      `Excluir ${name ?? "este membro"}? Esta ação não pode ser desfeita.`,
+      [
+        { text: "Cancelar", style: "cancel", onPress: () => setMemberToDeleteId(null) },
+        {
+          text: "Excluir",
+          style: "destructive",
+          onPress: async () => {
+            setMemberToDeleteId(null);
+            try {
+              await api.deleteFamilyMember(String(id), String(user.id));
+              await loadFamilyMembers();
+              if (selectedMemberId === id) {
+                setSelectedMemberId(null);
+                setMemberData(null);
+              }
+            } catch (e: any) {
+              Alert.alert("Erro", e?.message ?? "Não foi possível excluir.");
+            }
+          },
+        },
+      ]
+    );
+  };
+
   const handleRefresh = async () => {
     setRefreshing(true);
     await loadFamilyMembers();
-    if (selectedMemberId) {
+    if (selectedMemberId != null) {
       await loadMemberData(selectedMemberId);
     }
     setRefreshing(false);
@@ -141,6 +185,25 @@ export default function DashboardScreen() {
   const handleAddMember = () => {
     router.push("/add-family-member");
   };
+
+  const firstTodayDose = memberData?.todayDoses?.[0];
+  const firstNextDose = memberData?.nextDoses?.[0];
+  const hasYesterdayDoses = (memberData?.yesterdayDoses?.length ?? 0) > 0;
+
+  function logDoseParams(dose?: { id?: number; medicationId?: number | null; name?: string; dosage?: string; unit?: string } | null) {
+    const params: Record<string, string> = {
+      id_membro: String(selectedMemberId ?? ""),
+      nome_membro: selectedMemberName || "—",
+    };
+    if (dose) {
+      if (dose.id != null) params.id_dose_agendada = String(dose.id);
+      if (dose.medicationId != null) params.id_medicamento = String(dose.medicationId);
+      if (dose.name) params.nome_medicamento = dose.name;
+      if (dose.dosage) params.dosagem = dose.dosage;
+      if (dose.unit) params.unidade = dose.unit;
+    }
+    return params;
+  }
 
   if (loading) {
     return (
@@ -169,27 +232,30 @@ export default function DashboardScreen() {
         style={styles.profileScroll}
         contentContainerStyle={styles.profileScrollContent}
       >
-        {familyMembers.map((p) => (
+        {familyMembers.map((p) => {
+          const isSelected = selectedMemberId === p.id;
+          return (
           <TouchableOpacity
             key={p.id}
-            onPress={() => handleSelectMember(p.id)}
+            onPress={() => handleAvatarPress(p)}
             activeOpacity={0.7}
           >
             <View style={styles.profileItem}>
-              <View style={[styles.avatarRing, p.active && styles.avatarRingActive]}>
+              <View style={[styles.avatarRing, isSelected && styles.avatarRingActive]}>
                 <Image source={{ uri: p.avatar }} style={styles.avatar} />
-                {p.active && (
+                {isSelected && (
                   <View style={styles.checkBadge}>
                     <Ionicons name="checkmark" size={12} color={colors.primaryContent} />
                   </View>
                 )}
               </View>
-              <Text style={[styles.profileName, p.active && styles.profileNameActive]}>
+              <Text style={[styles.profileName, isSelected && styles.profileNameActive]}>
                 {p.name}
               </Text>
             </View>
           </TouchableOpacity>
-        ))}
+          );
+        })}
         <View style={styles.profileItem}>
           <TouchableOpacity onPress={handleAddMember} activeOpacity={0.7}>
             <View style={styles.addProfileCircle}>
@@ -200,14 +266,42 @@ export default function DashboardScreen() {
         </View>
       </ScrollView>
 
+      {memberToDeleteId != null && (
+        <View style={styles.deleteBar}>
+          <Text style={styles.deleteBarText}>
+            Excluir {familyMembers.find((m) => m.id === memberToDeleteId)?.name}?
+          </Text>
+          <View style={styles.deleteBarButtons}>
+            <TouchableOpacity style={styles.deleteBarCancel} onPress={() => setMemberToDeleteId(null)}>
+              <Text style={styles.deleteBarCancelText}>Cancelar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.deleteBarConfirm} onPress={handleConfirmDeleteMember}>
+              <Ionicons name="trash-outline" size={18} color="#fff" />
+              <Text style={styles.deleteBarConfirmText}>Excluir</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
+
       <ScrollView
         style={styles.feed}
         contentContainerStyle={styles.feedContent}
         showsVerticalScrollIndicator={false}
       >
+        {selectedMemberId == null ? (
+          <View style={styles.emptyStateCard}>
+            <Text style={styles.emptyStateText}>Selecione um membro acima para ver os dados.</Text>
+          </View>
+        ) : memberDataLoading ? (
+          <View style={styles.loadingCard}>
+            <ActivityIndicator size="small" color={colors.primary} />
+            <Text style={styles.loadingCardText}>Carregando dados...</Text>
+          </View>
+        ) : (
+          <>
         <TouchableOpacity
           style={styles.doseCard}
-          onPress={() => router.push("/log-dose")}
+          onPress={() => router.push({ pathname: "/log-dose", params: logDoseParams(firstTodayDose) })}
           activeOpacity={0.9}
         >
           <View style={styles.doseCardAccent} />
@@ -218,19 +312,33 @@ export default function DashboardScreen() {
                   <Ionicons name="medical" size={22} color={colors.lavender} />
                 </View>
                 <View>
-                  <Text style={styles.medName}>Amoxicillin</Text>
-                  <Text style={styles.medDetail}>5ml • Líquido</Text>
+                  {firstTodayDose ? (
+                    <>
+                      <Text style={styles.medName}>{firstTodayDose.name}</Text>
+                      <Text style={styles.medDetail}>
+                        {firstTodayDose.dosage}
+                        {firstTodayDose.unit ? ` ${firstTodayDose.unit}` : ""} • {firstTodayDose.unit === "ml" ? "Líquido" : firstTodayDose.unit === "mg" ? "Comprimido" : "Medicamento"}
+                      </Text>
+                    </>
+                  ) : (
+                    <>
+                      <Text style={styles.medName}>Nenhuma dose agendada</Text>
+                      <Text style={styles.medDetail}>Para hoje</Text>
+                    </>
+                  )}
                 </View>
               </View>
-              <View style={styles.dueBadge}>
-                <Ionicons name="time-outline" size={12} color={colors.alertRose} />
-                <Text style={styles.dueText}>Às 9:00</Text>
-              </View>
+              {firstTodayDose && (
+                <View style={styles.dueBadge}>
+                  <Ionicons name="time-outline" size={12} color={colors.alertRose} />
+                  <Text style={styles.dueText}>{formatScheduledTime(firstTodayDose.scheduledTime)}</Text>
+                </View>
+              )}
             </View>
             <View style={styles.doseCardBottom}>
               <TouchableOpacity
                 style={styles.logNowButton}
-                onPress={() => router.push("/log-dose")}
+                onPress={() => router.push({ pathname: "/log-dose", params: logDoseParams(firstTodayDose) })}
               >
                 <Ionicons name="checkmark" size={18} color={colors.primaryContent} />
                 <Text style={styles.logNowText}>Registrar</Text>
@@ -248,15 +356,28 @@ export default function DashboardScreen() {
             <View style={styles.widgetHeader}>
               <View>
                 <Text style={styles.widgetLabel}>Peso</Text>
-                <Text style={styles.widgetValue}>
-                  14.2<Text style={styles.widgetUnit}>kg</Text>
-                </Text>
+                {memberData?.member?.currentWeight != null ? (
+                  <>
+                    <Text style={styles.widgetValue}>
+                      {Number(memberData.member.currentWeight).toFixed(1)}
+                      <Text style={styles.widgetUnit}>kg</Text>
+                    </Text>
+                  </>
+                ) : (
+                  <Text style={styles.widgetValue}>—</Text>
+                )}
               </View>
               <View style={styles.widgetIconBg}>
                 <Ionicons name="scale-outline" size={18} color={colors.primary} />
               </View>
             </View>
-            <Text style={styles.widgetFooter}>+0.4kg desde a última verificação</Text>
+            <Text style={styles.widgetFooter}>
+              {memberData?.member?.currentWeight == null
+                ? "Peso não informado"
+                : memberData?.member?.weightVariation != null
+                  ? `${memberData.member.weightVariation >= 0 ? "+" : ""}${memberData.member.weightVariation.toFixed(1)}kg desde a última verificação`
+                  : "Último peso registrado"}
+            </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -267,17 +388,31 @@ export default function DashboardScreen() {
             <View style={styles.widgetHeader}>
               <View>
                 <Text style={styles.widgetLabel}>Próximos</Text>
-                <Text style={styles.widgetValueSm}>Ibuprofen</Text>
-                <Text style={styles.widgetSub}>Comprimido • 200mg</Text>
+                {firstNextDose ? (
+                  <>
+                    <Text style={styles.widgetValueSm}>{firstNextDose.name}</Text>
+                    <Text style={styles.widgetSub}>
+                      {firstNextDose.unit === "ml" ? "Líquido" : "Comprimido"} • {firstNextDose.dosage}
+                      {firstNextDose.unit ? firstNextDose.unit : ""}
+                    </Text>
+                  </>
+                ) : (
+                  <>
+                    <Text style={styles.widgetValueSm}>—</Text>
+                    <Text style={styles.widgetSub}>Nenhuma dose agendada</Text>
+                  </>
+                )}
               </View>
               <View style={[styles.widgetIconBg, { backgroundColor: colors.lavenderLight }]}>
                 <Ionicons name="calendar-outline" size={18} color={colors.lavender} />
               </View>
             </View>
-            <View style={styles.widgetTimeRow}>
-              <Ionicons name="time-outline" size={14} color={colors.textMuted} />
-              <Text style={styles.widgetTimeText}>2:00 PM</Text>
-            </View>
+            {firstNextDose && (
+              <View style={styles.widgetTimeRow}>
+                <Ionicons name="time-outline" size={14} color={colors.textMuted} />
+                <Text style={styles.widgetTimeText}>{formatScheduledTime(firstNextDose.scheduledTime)}</Text>
+              </View>
+            )}
           </TouchableOpacity>
         </View>
 
@@ -289,18 +424,24 @@ export default function DashboardScreen() {
                 <Ionicons name="checkmark-circle" size={22} color="#16a34a" />
               </View>
               <View>
-                <Text style={styles.yesterdayTitle}>Todas as Doses Registradas</Text>
-                <Text style={styles.yesterdaySubtitle}>Leo teve um bom dia</Text>
+                <Text style={styles.yesterdayTitle}>
+                  {hasYesterdayDoses ? "Todas as Doses Registradas" : "Nenhuma dose registrada ontem"}
+                </Text>
+                <Text style={styles.yesterdaySubtitle}>
+                  {selectedMemberName ? `${selectedMemberName} teve um bom dia` : "Selecione um membro"}
+                </Text>
               </View>
             </View>
             <Ionicons name="chevron-forward" size={20} color={colors.lavender} />
           </TouchableOpacity>
         </View>
+          </>
+        )}
       </ScrollView>
 
       <TouchableOpacity
         style={styles.fab}
-        onPress={() => router.push("/log-dose")}
+        onPress={() => router.push({ pathname: "/log-dose", params: logDoseParams(firstTodayDose ?? firstNextDose ?? undefined) })}
         activeOpacity={0.9}
       >
         <Ionicons name="add" size={32} color={colors.primaryContent} />
@@ -348,6 +489,30 @@ const styles = StyleSheet.create({
   profileScroll: { maxHeight: 110, paddingLeft: spacing.lg },
   profileScrollContent: { gap: 16, paddingRight: spacing.lg, paddingVertical: 8 },
   profileItem: { alignItems: "center", gap: 6 },
+  deleteBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.sm,
+    backgroundColor: colors.softRose,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.alertRoseLight,
+  },
+  deleteBarText: { fontSize: 14, fontWeight: "600", color: colors.textMain },
+  deleteBarButtons: { flexDirection: "row", gap: 12 },
+  deleteBarCancel: { paddingVertical: 8, paddingHorizontal: 16 },
+  deleteBarCancelText: { fontSize: 14, fontWeight: "600", color: colors.slate500 },
+  deleteBarConfirm: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    backgroundColor: colors.textRose,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: radii.full,
+  },
+  deleteBarConfirmText: { fontSize: 14, fontWeight: "700", color: "#fff" },
   avatarRing: {
     width: 72,
     height: 72,
@@ -534,6 +699,25 @@ const styles = StyleSheet.create({
   },
   yesterdayTitle: { fontSize: 14, fontWeight: "700", color: colors.textMain },
   yesterdaySubtitle: { fontSize: 12, color: colors.textMuted },
+  emptyStateCard: {
+    backgroundColor: colors.surfaceLight,
+    borderRadius: radii.xl,
+    padding: spacing.xl,
+    alignItems: "center",
+    justifyContent: "center",
+    minHeight: 120,
+  },
+  emptyStateText: { fontSize: 14, color: colors.textMuted, textAlign: "center" },
+  loadingCard: {
+    backgroundColor: colors.surfaceLight,
+    borderRadius: radii.xl,
+    padding: spacing.xl,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 12,
+    minHeight: 120,
+  },
+  loadingCardText: { fontSize: 14, color: colors.textMuted },
   fab: {
     position: "absolute",
     bottom: 100,

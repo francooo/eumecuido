@@ -94,6 +94,8 @@ export const doseRecords = pgTable('dose_records', {
   appliedUnit: text('applied_unit').notNull(), // MELHORIA 5: ml, mg, etc
   appliedAt: timestamp('applied_at').notNull(),
   timeOption: text('time_option').notNull(), // now, 15m_ago, 30m_ago
+  weightKgAtMoment: numeric('weight_kg_at_moment', { precision: 5, scale: 2 }), // peso no momento do registro
+  nextDoseScheduledAt: timestamp('next_dose_scheduled_at'), // horário da próxima dose (opcional)
   recordedBy: serial('recorded_by').references(() => users.id),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });

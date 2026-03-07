@@ -29,13 +29,21 @@ export async function GET(request: Request) {
       return NextResponse.json({ member: null });
     }
 
-    // Buscar peso mais recente
+    // Buscar peso mais recente (tabela weight_records)
     const [latestWeight] = await db
       .select()
       .from(weightRecords)
       .where(eq(weightRecords.memberId, parseInt(memberId)))
       .orderBy(desc(weightRecords.recordedAt))
       .limit(1);
+
+    // Peso: priorizar weight_records; se não houver, usar currentWeightKg do membro (ex.: novo membro com peso no cadastro)
+    const rawWeight = latestWeight
+      ? latestWeight.weightKg
+      : member.currentWeightKg;
+    const parsed = rawWeight != null && String(rawWeight).trim() !== "" ? parseFloat(String(rawWeight)) : NaN;
+    const currentWeightValue = Number.isNaN(parsed) ? null : parsed;
+    const weightLastLoggedAtValue = latestWeight?.recordedAt ?? (member.currentWeightKg ? member.weightLastLoggedAt : null);
 
     // Calcular variação de peso
     let weightVariation = null;
@@ -96,9 +104,9 @@ export async function GET(request: Request) {
     return NextResponse.json({
       member: {
         ...member,
-        currentWeight: latestWeight ? parseFloat(latestWeight.weightKg) : null,
+        currentWeight: currentWeightValue,
         weightVariation,
-        weightLastLoggedAt: latestWeight?.recordedAt,
+        weightLastLoggedAt: weightLastLoggedAtValue,
       },
       todayDoses,
       nextDoses,
