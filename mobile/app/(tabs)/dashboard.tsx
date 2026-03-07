@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -6,11 +6,14 @@ import {
   StyleSheet,
   ScrollView,
   Image,
+  ActivityIndicator,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors, spacing, radii } from "@/lib/theme";
+import { useAuth } from "@/hooks/useAuth";
+import { api } from "@/lib/api";
 
 const profiles = [
   {
@@ -18,30 +21,141 @@ const profiles = [
     active: true,
     avatar:
       "https://lh3.googleusercontent.com/aida-public/AB6AXuB900wM7OC9J0Ps93Sq6a3Sd9bHXVmE3jkz01hEaxD3gUfWfsLHPZp3Ny3EAkDD4FRN0h2Quh0MrU4gqv-zKwl-ZmLmgdmhWLM6wE9mePEwOWQztzFkc1MGKSITwPsVXdexLG00gS6zh9TiaTOQiX-m26EXJw7VAxrBJplEBzO0Bbtmv2caPf1gVw-pt2W-4hkM1t7p1R2QeaGNUwWsVSD-rjOn8bdgViKQ262hFgU5RhEmQoIziSYz1MN_yz0NH0gH7pmHm21gLe8",
+    id: 1,
   },
   {
     name: "Dad",
     active: false,
     avatar:
       "https://lh3.googleusercontent.com/aida-public/AB6AXuDR_Wq-UMVzFIU5p0zE65G3Rciq4GNtPnN5RcQdYJ6gDZnFtNbjcvZ8pCDdsx7IjdYXs6ihBZp61pkfA7gBDdjlF1d0kwxIs9wWSczJDqolFUadeSxkA4MaA3ZdvPbStd8bLRee-3R3IhplsGOdul5afJqrdDWL_fYECCUWL3D7v8047Uvqz23y_5MqCeie90EgVCp3hDs1yxZhY26v2rmBdpCKL1IVlbnY5qiqQwLnzvAVh7XOwHusac8Vzo3PqTldu1QfdrYFEZA",
+    id: 2,
   },
   {
     name: "Mom",
     active: false,
     avatar:
       "https://lh3.googleusercontent.com/aida-public/AB6AXuAcKNA23u0sDrd-3sJ0asySVT72JSNw7f3YNh6cb8oi_uy0br9-WJOP5jqzaSci8cImuggDpD3rSm5NlpSN7o6UoHEo4_xEC22XM_6AW39hqZrftSuPpuOshJkwNtPa-7_JGyb8t96NAdMGDbyeyNqODdSlYzdpzUbyo1PGnvf4prJxBEawDGxfvIu61rGpaVS37JtAzT0ZkbTQ9ziQFv9qJ-wSg2LDZyyf8a1xR4sNOFi1NkGZBO0Te2Kkr228KLaC0ar90ScSCqI",
+    id: 3,
   },
 ];
 
 export default function DashboardScreen() {
   const router = useRouter();
+  const { user, loading } = useAuth();
+  const [familyMembers, setFamilyMembers] = useState(profiles);
+  const [selectedMemberId, setSelectedMemberId] = useState<number | null>(null); // MELHORIA 1
+  const [memberData, setMemberData] = useState<any>(null); // MELHORIA 1
+  const [refreshing, setRefreshing] = useState(false); // MELHORIA 1
+
+  // Extrair primeiro nome
+  const firstName = user?.name?.split(' ')[0] || 'Usuário';
+
+  // Data dinâmica usando API nativa do JavaScript
+  const hoje = new Date();
+  const meses = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
+  const diasSemana = ['DOMINGO', 'SEGUNDA-FEIRA', 'TERÇA-FEIRA', 'QUARTA-FEIRA', 'QUINTA-FEIRA', 'SEXTA-FEIRA', 'SÁBADO'];
+  
+  const mes = meses[hoje.getMonth()];
+  const dia = hoje.getDate();
+  const diaSemana = diasSemana[hoje.getDay()];
+  const dataFormatada = `${mes} ${dia} • ${diaSemana}`;
+
+  // Registrar evento de carregamento
+  useEffect(() => {
+    if (user) {
+      api.logEvent({
+        eventType: 'home_date_rendered',
+        eventData: { date_shown: dataFormatada, locale: 'pt-BR' },
+        deviceTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      }).catch(console.error);
+    }
+  }, [user, dataFormatada]);
+
+  // Carregar membros da família
+  useEffect(() => {
+    loadFamilyMembers();
+  }, [user]);
+
+  // Carregar dados do membro selecionado (MELHORIA 1)
+  useEffect(() => {
+    if (selectedMemberId) {
+      loadMemberData(selectedMemberId);
+    }
+  }, [selectedMemberId]);
+
+  async function loadFamilyMembers() {
+    if (!user) return;
+    try {
+      const response = await api.getFamilyMembers(user.id.toString());
+      if (response.members && response.members.length > 0) {
+        const membersWithState = response.members.map((m: any, index: number) => ({
+          name: m.name,
+          active: index === 0, // Primeiro membro ativo por padrão
+          avatar: m.photoUrl || 'https://via.placeholder.com/60',
+          id: m.id,
+          weight: m.currentWeightKg,
+        }));
+        setFamilyMembers(membersWithState);
+        
+        // Selecionar automaticamente o primeiro membro (MELHORIA 1)
+        if (!selectedMemberId) {
+          setSelectedMemberId(membersWithState[0].id);
+        }
+      }
+    } catch (error) {
+      console.error('Error loading family members:', error);
+    }
+  }
+
+  // Carregar dados completos do membro (MELHORIA 1)
+  async function loadMemberData(memberId: number) {
+    try {
+      const response = await api.getMemberData(memberId.toString());
+      setMemberData(response);
+    } catch (error) {
+      console.error('Error loading member data:', error);
+      setMemberData(null);
+    }
+  }
+
+  // Handler para selecionar membro (MELHORIA 1)
+  const handleSelectMember = (memberId: number) => {
+    setSelectedMemberId(memberId);
+    // Atualizar estado de ativo/inativo
+    setFamilyMembers(prev => prev.map(m => ({
+      ...m,
+      active: m.id === memberId,
+    })));
+  };
+
+  // Refresh (MELHORIA 1)
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await loadFamilyMembers();
+    if (selectedMemberId) {
+      await loadMemberData(selectedMemberId);
+    }
+    setRefreshing(false);
+  };
+
+  const handleAddMember = () => {
+    router.push("/add-family-member");
+  };
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={colors.primary} />
+      </View>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
       <View style={styles.header}>
         <View>
-          <Text style={styles.greeting}>Bom Dia, Sarah</Text>
-          <Text style={styles.date}>OUT 24 • QUINTA-FEIRA</Text>
+          <Text style={styles.greeting}>Bom Dia, {firstName}</Text>
+          <Text style={styles.date}>{dataFormatada}</Text>
         </View>
         <TouchableOpacity style={styles.notifButton}>
           <Ionicons name="notifications-outline" size={26} color={colors.textMuted} />
@@ -55,25 +169,33 @@ export default function DashboardScreen() {
         style={styles.profileScroll}
         contentContainerStyle={styles.profileScrollContent}
       >
-        {profiles.map((p) => (
-          <View key={p.name} style={styles.profileItem}>
-            <View style={[styles.avatarRing, p.active && styles.avatarRingActive]}>
-              <Image source={{ uri: p.avatar }} style={styles.avatar} />
-              {p.active && (
-                <View style={styles.checkBadge}>
-                  <Ionicons name="checkmark" size={12} color={colors.primaryContent} />
-                </View>
-              )}
+        {familyMembers.map((p) => (
+          <TouchableOpacity
+            key={p.id}
+            onPress={() => handleSelectMember(p.id)}
+            activeOpacity={0.7}
+          >
+            <View style={styles.profileItem}>
+              <View style={[styles.avatarRing, p.active && styles.avatarRingActive]}>
+                <Image source={{ uri: p.avatar }} style={styles.avatar} />
+                {p.active && (
+                  <View style={styles.checkBadge}>
+                    <Ionicons name="checkmark" size={12} color={colors.primaryContent} />
+                  </View>
+                )}
+              </View>
+              <Text style={[styles.profileName, p.active && styles.profileNameActive]}>
+                {p.name}
+              </Text>
             </View>
-            <Text style={[styles.profileName, p.active && styles.profileNameActive]}>
-              {p.name}
-            </Text>
-          </View>
+          </TouchableOpacity>
         ))}
         <View style={styles.profileItem}>
-          <View style={styles.addProfileCircle}>
-            <Ionicons name="add" size={24} color={colors.lavender} />
-          </View>
+          <TouchableOpacity onPress={handleAddMember} activeOpacity={0.7}>
+            <View style={styles.addProfileCircle}>
+              <Ionicons name="add" size={24} color={colors.lavender} />
+            </View>
+          </TouchableOpacity>
           <Text style={styles.profileName}>Adicionar</Text>
         </View>
       </ScrollView>
@@ -189,6 +311,12 @@ export default function DashboardScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.backgroundLight },
+  loadingContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.backgroundLight,
+  },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gentle Care - Expo Connection Guide</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        h1 {
+            color: #2d3748;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 30px;
+        }
+        .qr-section {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .qr-code {
+            width: 250px;
+            height: 250px;
+            margin: 0 auto;
+            border: 4px solid #667eea;
+            border-radius: 12px;
+            padding: 10px;
+            background: white;
+        }
+        .instructions {
+            background: #f7fafc;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .instructions h3 {
+            color: #2d3748;
+            margin-top: 0;
+        }
+        .instructions ol {
+            color: #4a5568;
+            line-height: 1.8;
+        }
+        .url-box {
+            background: #edf2f7;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            text-align: center;
+            margin: 15px 0;
+            word-break: break-all;
+        }
+        .success-box {
+            background: #c6f6d5;
+            border-left: 4px solid #48bb78;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .warning-box {
+            background: #feebc8;
+            border-left: 4px solid #ed8936;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .button {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 10px 5px;
+            transition: transform 0.2s;
+        }
+        .button:hover {
+            transform: translateY(-2px);
+        }
+        .status {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+        .status-item {
+            text-align: center;
+        }
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            background: #48bb78;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌿 Gentle Care Mobile App</h1>
+        <p class="subtitle">Connect with Expo Go</p>
+
+        <div class="status">
+            <div class="status-item">
+                <span class="status-dot"></span>Backend: Running<br>
+                <small>Port 5000</small>
+            </div>
+            <div class="status-item">
+                <span class="status-dot"></span>Expo: Running<br>
+                <small>Port 8081</small>
+            </div>
+        </div>
+
+        <div class="qr-section">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=exp://192.168.18.149:8081" alt="QR Code" class="qr-code">
+        </div>
+
+        <div class="instructions">
+            <h3>📱 How to Connect:</h3>
+            <ol>
+                <li><strong>Install Expo Go</strong> from Play Store (Android) or App Store (iOS)</li>
+                <li><strong>Open Expo Go</strong> on your phone</li>
+                <li><strong>Scan the QR code</strong> above using the Expo Go app</li>
+                <li><strong>Wait for the app to load</strong></li>
+                <li><strong>Create your account</strong> and start using!</li>
+            </ol>
+        </div>
+
+        <div class="warning-box">
+            <strong>⚠️ Important:</strong> Make sure your phone is connected to the same Wi-Fi network as your computer (192.168.18.x)
+        </div>
+
+        <div class="instructions">
+            <h3>🔗 Alternative Connection Methods:</h3>
+            
+            <p><strong>Method 1: Manual URL Entry</strong></p>
+            <div class="url-box">exp://192.168.18.149:8081</div>
+            <p style="text-align: center;">
+                <a href="exp://192.168.18.149:8081" class="button">Open in Expo Go</a>
+            </p>
+
+            <p><strong>Method 2: Direct Link</strong></p>
+            <p style="text-align: center;">
+                <a href="http://localhost:8081" class="button">Open in Web Browser</a>
+            </p>
+        </div>
+
+        <div class="success-box">
+            <strong>✅ Servers Running:</strong><br>
+            • Backend API: http://192.168.18.149:5000<br>
+            • Expo Metro: exp://192.168.18.149:8081<br>
+            • Database: Connected to Neon PostgreSQL
+        </div>
+
+        <div class="instructions">
+            <h3>🐛 Troubleshooting:</h3>
+            <ul>
+                <li>If QR code doesn't work, manually enter: <code>exp://192.168.18.149:8081</code></li>
+                <li>Check if both servers are running (check terminal)</li>
+                <li>Verify your phone is on the same Wi-Fi network</li>
+                <li>Try reloading the app in Expo Go (press 'r')</li>
+                <li>Clear Expo Go cache and try again</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Auto-refresh page every 30 seconds to update status
+        setTimeout(() => {
+            location.reload();
+        }, 30000);
+    </script>
+</body>
+</html>

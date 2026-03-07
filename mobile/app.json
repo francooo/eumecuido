@@ -6,6 +6,7 @@
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "scheme": "gentlecare",
     "splash": {
       "backgroundColor": "#f6f8f7",
       "resizeMode": "contain"

@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { users, profiles } from "@/db/schema";
+import { users, profiles, userSessions } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
@@ -40,8 +40,28 @@ export async function POST(request: Request) {
       .from(profiles)
       .where(eq(profiles.userId, user.id));
 
+    // Atualizar last_login_at
+    await db
+      .update(users)
+      .set({ lastLoginAt: new Date() })
+      .where(eq(users.id, user.id));
+
+    // Registrar sessão
+    const headersList = request.headers;
+    await db.insert(userSessions).values({
+      userId: user.id,
+      deviceInfo: headersList.get('user-agent') || 'unknown',
+      screenLoaded: 'home_screen',
+      ipAddress: headersList.get('x-forwarded-for')?.split(',')[0] || 'unknown',
+    });
+
     return NextResponse.json({
-      user: { id: user.id, name: user.name, email: user.email },
+      user: { 
+        id: user.id, 
+        name: user.name, 
+        email: user.email,
+        firstName: user.firstName || user.name.split(' ')[0]
+      },
       profiles: userProfiles,
     });
   } catch (error: any) {

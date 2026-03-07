@@ -52,4 +52,59 @@ export const api = {
     notes?: string;
   }) => apiFetch("/api/logs", { method: "POST", body: JSON.stringify(data) }),
   seed: () => apiFetch("/api/seed", { method: "POST" }),
+
+  // Novos endpoints para funcionalidades da Home Screen
+  // AGORA: Usa userId em vez de familyId para isolamento
+  getFamilyMembers: (userId: string) =>
+    apiFetch(`/api/family-members?userId=${userId}`),
+
+  createFamilyMember: (data: {
+    createdByUserId: number;
+    name: string;
+    relation: string;
+    photoUrl?: string;
+    currentWeightKg?: string; // MELHORIA 2
+  }) => apiFetch("/api/family-members", { 
+    method: "POST", 
+    body: JSON.stringify(data) 
+  }),
+
+  // NOVO: Buscar dados completos do membro (MELHORIA 1)
+  getMemberData: (memberId: string) =>
+    apiFetch(`/api/member-data?memberId=${memberId}`),
+
+  // NOVO: Criar registro de peso (MELHORIA 2)
+  createWeightRecord: (data: {
+    memberId: number;
+    weightKg: string;
+    recordedBy?: number;
+  }) => apiFetch("/api/weight-records", {
+    method: "POST",
+    body: JSON.stringify(data),
+  }),
+
+  // NOVO: Registrar dose (MELHORIA 4 e 5)
+  registerDose: (data: {
+    memberId: number;
+    scheduledDoseId?: number;
+    medicationId?: number;
+    medicationNameApplied: string;
+    appliedDosage: string;
+    appliedUnit: string;
+    appliedAt: string;
+    timeOption: string; // 'now', '15m_ago', '30m_ago'
+    recordedBy?: number;
+  }) => apiFetch("/api/dose-records", {
+    method: "POST",
+    body: JSON.stringify(data),
+  }),
+
+  logEvent: (data: {
+    eventType: string;
+    eventData?: any;
+    deviceTimezone?: string;
+  }) => apiFetch("/api/app-events", { 
+    method: "POST", 
+    body: JSON.stringify(data) 
+  }),
 };
