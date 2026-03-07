@@ -107,6 +107,7 @@ export async function GET(request: Request) {
         currentWeight: currentWeightValue,
         weightVariation,
         weightLastLoggedAt: weightLastLoggedAtValue,
+        updatedAt: member.updatedAt,
       },
       todayDoses,
       nextDoses,
