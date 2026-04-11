@@ -832,12 +832,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  widgetFooter: { fontSize: 10, color: colors.textMuted, marginTop: "auto" },
+  widgetFooter: { fontSize: 10, color: colors.textMuted },
   widgetTimeRow: {
     flexDirection: "row",
     alignItems: "center",
     gap: 6,
-    marginTop: "auto",
   },
   widgetTimeText: { fontSize: 13, color: colors.textMuted },
   yesterdaySection: { marginTop: 8 },
